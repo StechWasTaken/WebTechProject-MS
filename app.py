@@ -9,6 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'da
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # app.register_blueprint(bp_docent)
+# https://flask.palletsprojects.com/en/1.1.x/blueprints/
 
 db.init_app(app)
 
