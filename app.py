@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 # app = Flask(__name__)
 
-
 # app.register_blueprint(bp_docent)
 # https://flask.palletsprojects.com/en/1.1.x/blueprints/
 
