@@ -11,14 +11,14 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'mijngeheimesleutel'
 
-# ook moet de database volgens mij hier.
+# Database
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.create_all()
 
-#Blueprints
+# Blueprints
 from project.studenten.views import studenten_blueprint
 from project.views import standaard_blueprint
 
