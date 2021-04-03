@@ -10,4 +10,4 @@ standaard_blueprint = Blueprint('standaard',
 def cursus():
     # code voor cursus
 
-    return render_template('cursus.html',)
+    return render_template('cursus.html')
