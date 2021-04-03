@@ -31,6 +31,22 @@ class User(db.Model):
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
 
+class Admin(db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, primary_key=True)
+    email       = db.Column(db.Text, nullable=False)
+    username    = db.Column(db.Text, nullable=False)
+    password    = db.Column(db.Text, nullable=False)
+
+    def __init__(self, username, email, password):
+        self.username   = username
+        self.email      = email
+        self.password   = generate_password_hash(password)
+
+    def __repr__(self):
+        return f"<Admin email={self.email} username={self.username}>"
+
+
 class Teacher(db.Model):
 
     __tablename__ = 'teachers'
