@@ -22,17 +22,19 @@ def login():
 @standaard_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     # code voor register
-    form = VoegtoeForm()
+    form = RegisterForm()
 
     if form.validate_on_submit():
-        naam = form.naam.data
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
 
-        new_cur = Cursist(naam)
-        db.session.add(new_cur)
+        db.session.add(user)
         db.session.commit()
+        flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
 
         return redirect(url_for('index')) # aanpassen!
 
-    return render_template('register.html')
+    return render_template('register.html', form=form)
 
  
