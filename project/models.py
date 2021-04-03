@@ -1,6 +1,19 @@
+import os
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
 
-db = SQLAlchemy()
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Migrate(app, db)
+
 
 class User(db.Model):
 
@@ -68,5 +81,3 @@ lecture_attendants = db.Table(
     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
     db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
 )
-
-db.create_all()
