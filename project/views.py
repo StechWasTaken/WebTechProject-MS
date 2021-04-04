@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect, url_for
 from flask.blueprints import Blueprint
+from flask_login import login_user, login_required, logout_user
 from project.forms import *
 from project.models import *
+from project import app
 # from project import db
 
 standaard_blueprint = Blueprint('standaard',
@@ -18,11 +20,25 @@ def cursus():
 
     return render_template('cursus.html', lectures=lectures)
 
-@standaard_blueprint.route('/login')
+@standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     # code voor login
+    form = LoginForm()
 
-    return render_template('login.html')
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        print(user, user.check_password(form.password.data))
+        if user.check_password(form.password.data) and user is not None:
+            login_user(user)
+            flash('Succesvol ingelogd.')
+            return redirect(url_for('index'))
+
+    return render_template('login.html', form=form)
+
+@standaard_blueprint.route('/welkom')
+@login_required
+def welkom():
+    return render_template('welkom.html')
 
 @standaard_blueprint.route('/register', methods=['GET', 'POST'])
 def register():

@@ -6,7 +6,7 @@ from project.models import User
 
 class RegisterForm(FlaskForm):
 
-    email = StringField('Email', validators=[DataRequired(),Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm',    message='Passwords Must Match!')])
     pass_confirm = PasswordField('Confirm password', validators=[DataRequired()])
@@ -20,6 +20,11 @@ class RegisterForm(FlaskForm):
     def check_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Deze gebruikersnaam is al vergeven, probeer een ander naam!')
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Inloggen')
 
 
 class VerwijderForm(FlaskForm):

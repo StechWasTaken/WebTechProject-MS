@@ -2,18 +2,25 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 migrate = Migrate()
+login_manager = LoginManager()
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+class User(db.Model, UserMixin):
 
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.Text, nullable=False)
-    username    = db.Column(db.Text, nullable=False)
-    password    = db.Column(db.Text, nullable=False)
+    email       = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    username    = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    password    = db.Column(db.String(128), nullable=False)
 
     def __init__(self, username, email, password):
         self.username   = username
@@ -22,6 +29,9 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class Admin(db.Model):
     __tablename__ = 'admin'
