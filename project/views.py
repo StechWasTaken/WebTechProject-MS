@@ -35,10 +35,12 @@ def login():
 
     return render_template('login.html', form=form)
 
-@standaard_blueprint.route('/welkom')
+@standaard_blueprint.route('/logout')
 @login_required
-def welkom():
-    return render_template('welkom.html')
+def logout():
+    logout_user()
+    flash('Je bent nu uitgelogd!')
+    return redirect(url_for('index'))
 
 @standaard_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
