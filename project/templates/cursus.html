@@ -6,7 +6,27 @@
     
         <body class="vsc-initialized">{% extends "base.html" %} 
             {% block content %}
-            <h1>Cursuspagina</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Taal</th>
+                        <th scope="col">Docent</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Locatie</th>
+                        <th scope="col">Aanmelden</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lecture in lectures %}
+                    <tr>
+                        <td>{{ lecture.language }}</td>
+                        <td>{{ lecture.username }}</td>
+                        <td>{{ lecture.start_time }}</td>
+                        <td>{{ lecture.location }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endblock %}
         </body>   
 </html>

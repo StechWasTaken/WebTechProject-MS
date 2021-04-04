@@ -5,7 +5,6 @@ from flask_migrate import Migrate
 from flask.blueprints import Blueprint
 from project.models import *
 
-
 # de app moet hier geïnitialiseerd worden, niet in app.py, hier pakt hij __name__ goed
 app = Flask(__name__)
 
@@ -16,7 +15,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.create_all()
+db.init_app(app)
+migrate.init_app(app, db)
+
+with app.app_context():
+    db.create_all()
 
 # Blueprints
 from project.studenten.views import studenten_blueprint

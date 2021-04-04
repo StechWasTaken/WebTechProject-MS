@@ -1,6 +1,7 @@
 from flask import render_template
 from flask.blueprints import Blueprint
 from project.forms import *
+from project.models import *
 # from project import db
 
 standaard_blueprint = Blueprint('standaard',
@@ -10,8 +11,12 @@ standaard_blueprint = Blueprint('standaard',
 @standaard_blueprint.route('/cursus')
 def cursus():
     # code voor cursus
+    lectures =  Lecture.query\
+                .join(Language, Lecture.language_id == Language.id)\
+                .join(Teacher, Lecture.teacher_id == Teacher.id)\
+                .add_columns(Language.language, Teacher.username, Lecture.start_time, Lecture.location)
 
-    return render_template('cursus.html')
+    return render_template('cursus.html', lectures=lectures)
 
 @standaard_blueprint.route('/login')
 def login():
