@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from flask.blueprints import Blueprint
 from project.forms import *
 from project.models import *
@@ -38,7 +38,7 @@ def register():
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
 
-        return redirect(url_for('index')) # aanpassen!
+        return redirect(url_for('standaard.login')) # aanpassen!
 
     return render_template('register.html', form=form)
 

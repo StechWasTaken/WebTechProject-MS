@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -72,7 +73,7 @@ class Lecture(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     teacher_id      = db.Column(db.Integer, db.ForeignKey("teachers.id"))
     language_id     = db.Column(db.Integer, db.ForeignKey("languages.id"))
-    start_time      = db.Column(db.DateTime, nullable=False)
+    start_time      = db.Column(db.Text, nullable=False) # format: d-m-y h:m
     location        = db.Column(db.Text, nullable=False)
 
     def __init__(self, start_time, location):
