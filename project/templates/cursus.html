@@ -13,7 +13,7 @@
                         <th scope="col">Docent</th>
                         <th scope="col">Datum</th>
                         <th scope="col">Locatie</th>
-                        <th scope="col">Aanmelden</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,6 +23,7 @@
                         <td>{{ lecture.username }}</td>
                         <td>{{ lecture.start_time }}</td>
                         <td>{{ lecture.location }}</td>
+                        <td><a href='#' class="btn btn-dark">Aanmelden</a></td> <!---moet nog een dynamische link aanmaken--->
                     </tr>
                     {% endfor %}
                 </tbody>
