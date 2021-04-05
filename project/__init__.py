@@ -24,7 +24,7 @@ with app.app_context():
     db.create_all()
 
 # Blueprints
-from project.student.views import student_blueprint
+from project.gebruikers.student.views import student_blueprint
 from project.views import standaard_blueprint
 
 app.register_blueprint(student_blueprint, url_prefix="/student")
