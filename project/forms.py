@@ -25,8 +25,3 @@ class LoginForm(FlaskForm):
     password = PasswordField('Wachtwoord', validators=[DataRequired()])
     submit = SubmitField('Inloggen')
 
-
-class VerwijderForm(FlaskForm):
-
-    id = IntegerField('Vul het ID van de cursist in en klik op Verwijder:')
-    submit = SubmitField('Verwijder')

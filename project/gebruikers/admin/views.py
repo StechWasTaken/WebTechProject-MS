@@ -9,7 +9,7 @@ admin_blueprint = Blueprint('admin',
                              __name__,
                              template_folder='templates/admin')
 
-@admin_blueprint.route('/rooster')
+@admin_blueprint.route('/admin/rooster')
 def rooster():
     # code voor rooster
 

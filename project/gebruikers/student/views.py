@@ -7,7 +7,7 @@ student_blueprint = Blueprint('student',
                              __name__,
                              template_folder='templates/student')
 
-@student_blueprint.route('/rooster')
+@student_blueprint.route('/student/rooster')
 def rooster():
     # code voor rooster
 
