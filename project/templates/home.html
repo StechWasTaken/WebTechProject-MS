@@ -1,15 +1,12 @@
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
+{% extends "base.html" %}
 
-    <body class="vsc-initialized">
-    {% extends "base.html" %}
-    {% block content %}
-    <div class="jumbotron">
-        <h1>Welkom bij IT Academy Noord-Nederland!</h1>
-        <p>Om te beginnen, selecteer een item uit de navigatiebalk.</p>
-    </div>
-    {% endblock %}
-    </body>
-</html>
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class = "blueheader">Welkom bij IT Academy Noord-Nederland!</h1>
+    <p>Om te beginnen, selecteer een item uit de navigatiebalk.</p>
+</div>
+{% endblock %}

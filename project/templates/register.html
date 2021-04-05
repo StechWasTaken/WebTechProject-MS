@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
+{% block header %}
+  <h1>{% block title %}Registratie{% endblock %}</h1>
+{% endblock %}
+
 {% block content %}
 
-<h1> Registreren </h1>
+<h1 class = "blueheader"> Registratie </h1>
     
 <div class="col-12">
     <form method="POST">

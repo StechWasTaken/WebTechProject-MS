@@ -1,1 +1,30 @@
+/* ctr shift r in chrome om css te herladen */
+
+
+html { 
+    background-color: white;
+}
+
+
+.blueheader {
+    color: steelblue;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+.jumbotron {
+    background-color: white !important;
+    color: black
+}
+
+.container-fluid {
+    margin-top: 5%;
+  
+}
+
+
+
+/* flash bericht */
+.alert { 
+    margin: 1rem 0.1rem !important; 
+}
 
