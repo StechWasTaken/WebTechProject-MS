@@ -24,6 +24,9 @@
             <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a>
             <a class="nav-item nav-link" href="{{ url_for('standaard.cursus') }}">Cursussen</a>
             {% if current_user.is_authenticated %}                          
+            <a class="nav-item nav-link" href="{{ url_for('student.rooster') }}">Rooster</a>
+            {% endif %}
+            {% if current_user.is_authenticated %}                          
             <a class="nav-item nav-link" href="{{ url_for('standaard.logout') }}">Uitloggen</a>
             {% else %}
             <a class="nav-item nav-link" href="{{ url_for('standaard.login') }}">Inloggen</a>

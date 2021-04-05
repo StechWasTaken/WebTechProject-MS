@@ -3,11 +3,11 @@ from flask.blueprints import Blueprint
 # from project import db
 # from project.model import Rooster
 
-studenten_blueprint = Blueprint('studenten',
+student_blueprint = Blueprint('student',
                              __name__,
-                             template_folder='templates/studenten')
+                             template_folder='templates/student')
 
-@studenten_blueprint.route('/rooster')
+@student_blueprint.route('/rooster')
 def rooster():
     # code voor rooster
 
