@@ -11,14 +11,23 @@ html {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
+.whitetext {
+    color: white
+}
+
+
 .jumbotron {
-    background-color: white !important;
-    color: black
+    background-color:ghostwhite !important;
+    margin-top: 25px;
+    color: black;
 }
 
 .container-fluid {
-    margin-top: 5%;
-  
+    background-color: steelblue ;
+    text-align: center;
+    margin-top: 50px;
+    padding: 3%;
+    border-radius: 25px;
 }
 
 
