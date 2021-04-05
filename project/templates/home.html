@@ -31,6 +31,12 @@
       </div>
 
     </div>
+    {% if current_user.is_authenticated %}
+    <div class="col">
+      <div class="container-fluid">
+        <h1 class = "whitetext">Welkom!</h1> <!--username? andere pagina?-->
+      </div>    
+    {% else %}
     <div class="col">
       <div class="container-fluid">
         <a href="{{ url_for('standaard.login') }}"><h1 class = "whitetext">Login</h1></a>
@@ -39,6 +45,7 @@
         <a href="{{ url_for('standaard.register') }}"><h1 class = "whitetext">Registreren</h1></a>
       </div>
     </div>
+    {% endif %}
   </div>
 
 
