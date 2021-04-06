@@ -15,6 +15,12 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(user_id)
 
+def getRole(uid):
+    """ gets role name """
+    user = UserRoles.query.filter_by(user_id=uid).first()
+    role = Role.query.filter_by(id = user.role_id).first()
+    return role.name
+
 class User(db.Model, UserMixin):
 
     __tablename__ = 'users'
@@ -27,7 +33,6 @@ class User(db.Model, UserMixin):
         self.username   = username
         self.email      = email
         self.password   = generate_password_hash(password)
-        self.user_token = '123'
 
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
@@ -35,8 +40,6 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     
-
-    roles = db.relationship("Role", secondary="user_roles")
 
 
 class Role(db.Model):
@@ -56,6 +59,7 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
+
 
 
 class Teacher(db.Model):

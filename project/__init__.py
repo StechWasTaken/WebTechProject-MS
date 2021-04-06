@@ -23,11 +23,6 @@ login_manager.login_view = 'standaard.login'
 
 with app.app_context():
     db.create_all()
-
-
-# Flask_User
-app.config['USER_ENABLE_EMAIL'] = False # dit zorgt voor mails, maar dat doen we niet
-user_manager = UserManager(app, db, User)
  
 
 # Blueprints
@@ -36,4 +31,5 @@ from project.views import standaard_blueprint
 
 app.register_blueprint(student_blueprint, url_prefix="/student")
 app.register_blueprint(standaard_blueprint)
+
 

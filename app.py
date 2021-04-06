@@ -2,6 +2,8 @@ import os
 from project import app
 from flask import Flask, render_template, Blueprint
 from flask_sqlalchemy import SQLAlchemy
+from project.models import *
+from flask_login import current_user
 
 
 # app.register_blueprint(bp_docent)
@@ -10,7 +12,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    role = 'geen'
+    if current_user.is_authenticated:
+        role = getRole(current_user.id)
+
+    return render_template('home.html', role = role)
 
 if __name__ == "__main__":
     app.run(debug=True)

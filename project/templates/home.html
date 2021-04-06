@@ -34,7 +34,7 @@
     {% if current_user.is_authenticated %}
     <div class="col">
       <div class="container-fluid">
-        <h1 class = "whitetext">Welkom!</h1> <!--username? andere pagina?-->
+        <h1 class = "whitetext">Welkom! {{role}}</h1> <!--username? andere pagina?-->
       </div>    
     {% else %}
     <div class="col">
