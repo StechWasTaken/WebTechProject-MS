@@ -4,6 +4,7 @@ from flask_login import login_user, login_required, logout_user
 from project.forms import *
 from project.models import *
 from project import app
+from flask_user import roles_required
 
 standaard_blueprint = Blueprint('standaard',
                              __name__,

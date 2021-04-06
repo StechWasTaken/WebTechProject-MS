@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager
 from flask_login import UserMixin
 
+
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
@@ -26,12 +27,35 @@ class User(db.Model, UserMixin):
         self.username   = username
         self.email      = email
         self.password   = generate_password_hash(password)
+        self.user_token = '123'
 
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    
+
+    roles = db.relationship("Role", secondary="user_roles")
+
+
+class Role(db.Model):
+    __tablename__   = 'roles'
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(16), unique=True, nullable=False)
+
+    def __init__(self, role):
+        self.name = name
+
+    def __repr__(self):
+        return f"<Role ={self.name}>"
+
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
 
 
 class Teacher(db.Model):
@@ -81,30 +105,9 @@ class Lecture(db.Model):
         return f"<Lecture start_time={self.start_time} location={self.location}>"
 
 
-class Role(db.Model):
-    __tablename__   = 'roles'
-    id              = db.Column(db.Integer, primary_key=True)
-    role          = db.Column(db.String(16), unique=True, nullable=False)
-
-    def __init__(self, role):
-        self.role = role
-
-    def __repr__(self):
-        return f"<Role ={self.role}>"
-
-
-# user and role association table
-User_Roles = db.Table(
-    "User_Roles",
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
-    db.Column("role_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True)
-)
-
-
-
 # association table: LECTURES <-> ATTENDANTS <-> USERS
 lecture_attendants = db.Table(
     "lecture_attendants",
     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
-    db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
+    db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True)
 )

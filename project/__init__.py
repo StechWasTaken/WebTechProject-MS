@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask.blueprints import Blueprint
+from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 from project.models import *
 
 # de app moet hier geïnitialiseerd worden, niet in app.py, hier pakt hij __name__ goed
@@ -22,6 +23,12 @@ login_manager.login_view = 'standaard.login'
 
 with app.app_context():
     db.create_all()
+
+
+# Flask_User
+app.config['USER_ENABLE_EMAIL'] = False # dit zorgt voor mails, maar dat doen we niet
+user_manager = UserManager(app, db, User)
+ 
 
 # Blueprints
 from project.gebruikers.student.views import student_blueprint
