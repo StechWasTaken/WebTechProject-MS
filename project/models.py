@@ -33,37 +33,23 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-class Admin(db.Model):
-    __tablename__ = 'admin'
-    id = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.Text, nullable=False)
-    username    = db.Column(db.Text, nullable=False)
-    password    = db.Column(db.Text, nullable=False)
-
-    def __init__(self, username, email, password):
-        self.username   = username
-        self.email      = email
-        self.password   = generate_password_hash(password)
-
-    def __repr__(self):
-        return f"<Admin email={self.email} username={self.username}>"
-
 
 class Teacher(db.Model):
 
     __tablename__ = 'teachers'
-    id = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.Text, nullable=False)
-    username    = db.Column(db.Text, nullable=False)
-    password    = db.Column(db.Text, nullable=False)
+    id          = db.Column(db.Integer, primary_key=True)
+    email       = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    username    = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    password    = db.Column(db.String(128), nullable=False)
 
     def __init__(self, username, email, password):
+        self.id         = id
         self.username   = username
         self.email      = email
         self.password   = generate_password_hash(password)
 
     def __repr__(self):
-        return f"<Teacher email={self.email} username={self.username}>"
+        return f"<Teacher id = {self.teacher_id}>"
 
 class Language(db.Model):
 
@@ -76,6 +62,7 @@ class Language(db.Model):
 
     def __repr__(self):
         return f"<Language language={self.language}>"
+
 
 class Lecture(db.Model):
 
@@ -92,6 +79,28 @@ class Lecture(db.Model):
 
     def __repr__(self):
         return f"<Lecture start_time={self.start_time} location={self.location}>"
+
+
+class Role(db.Model):
+    __tablename__   = 'roles'
+    id              = db.Column(db.Integer, primary_key=True)
+    role          = db.Column(db.String(16), unique=True, nullable=False)
+
+    def __init__(self, role):
+        self.role = role
+
+    def __repr__(self):
+        return f"<Role ={self.role}>"
+
+
+# user and role association table
+User_Roles = db.Table(
+    "User_Roles",
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column("role_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True)
+)
+
+
 
 # association table: LECTURES <-> ATTENDANTS <-> USERS
 lecture_attendants = db.Table(
