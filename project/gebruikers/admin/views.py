@@ -1,16 +1,23 @@
 from flask import render_template
 from flask.blueprints import Blueprint
-# from project import db
-# from project.model import Rooster
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_login import current_user
+from project.models import *
+from project import app
 
-# rooster, cursussen en talen toevoegen, docentgegevens bewerken
+# /admin
 
-admin_blueprint = Blueprint('admin',
+
+admin_blueprint = Blueprint('administrator',
                              __name__,
                              template_folder='templates/admin')
 
-@admin_blueprint.route('/admin/rooster')
-def rooster():
-    # code voor rooster
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        if getRole(current_user.id) == "admin":
+            return True
+        return False
 
-    return render_template('rooster.html')
+admin = Admin(app)
+admin.add_view(AdminModelView(User, db.session))
