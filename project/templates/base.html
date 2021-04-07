@@ -7,6 +7,7 @@
 
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"     integrity="sha384-  Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"   crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-   KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"   crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"     integrity="sha384-  ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"   crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"   integrity="sha384-  JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"   crossorigin="anonymous"></script>
@@ -26,14 +27,24 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <div class="navbar-nav ml-auto">
+        <div class="navbar-nav ml-auto d-lg-flex align-items-center">
             <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a>
-            <a class="nav-item nav-link" href="{{ url_for('standaard.cursus') }}">Cursussen</a>
+            <a class="nav-item nav-link" href="{{ url_for('standaard.cursussen') }}">Cursussen</a>
             {% if current_user.is_authenticated %}                          
             <a class="nav-item nav-link" href="{{ url_for('student.rooster') }}">Rooster</a>
             {% endif %}
-            {% if current_user.is_authenticated %}                          
-            <a class="nav-item nav-link" href="{{ url_for('standaard.logout') }}">Uitloggen</a>
+            {% if current_user.is_authenticated %}
+            <div class="dropdown nav-item nav-link">
+                <button class="btn btn-outline-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-user"></i> {{ current_user.username }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Inschrijvingen</a>
+                    <a class="dropdown-item" href="#">Instellingen</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('standaard.logout') }}">Uitloggen</a>
+                </div>
+            </div>                          
             {% else %}
             <a class="nav-item nav-link" href="{{ url_for('standaard.login') }}">Inloggen</a>
             <a class="nav-item nav-link" href="{{ url_for('standaard.register') }}">Registreren</a>

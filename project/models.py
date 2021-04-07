@@ -93,9 +93,23 @@ class Lecture(db.Model):
     def __repr__(self):
         return f"<Lecture start_time={self.start_time} location={self.location}>"
 
+# # association table: LECTURES <-> ATTENDANTS <-> USERS
+# lecture_attendants = db.Table(
+#     "lecture_attendants",
+#     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+#     db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
+# )
+
 # association table: LECTURES <-> ATTENDANTS <-> USERS
-lecture_attendants = db.Table(
-    "lecture_attendants",
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
-    db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
-)
+class Attendee(db.Model):
+    
+    __tablename__ = 'attendees'
+    user_id     = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    lecture_id  = db.Column(db.Integer, db.ForeignKey("lectures.id"), primary_key=True)
+
+    def __init__(self, user_id, lecture_id):
+        self.user_id = user_id
+        self.lecture_id = lecture_id
+
+    def __repr__(self):
+        return f"<Attendee user_id={self.user_id} lecture_id={self.lecture_id}>"
