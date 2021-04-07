@@ -15,11 +15,21 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(user_id)
 
+
+def addRole(uid, rolename):
+    """ adds a role to user, in UserRoles table"""
+    user = User.query.filter_by(user_id=uid).first()
+    role = Role.query.filter_by(role.name == rolename).first()
+    userrole = UserRoles(user.id, role.id)
+    db.session.add(userrole)
+    de.session.commit()
+
 def getRole(uid):
     """ gets role name """
     user = UserRoles.query.filter_by(user_id=uid).first()
     role = Role.query.filter_by(id = user.role_id).first()
     return role.name
+    
 
 class User(db.Model, UserMixin):
 
@@ -39,10 +49,11 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
     
 
-
 class Role(db.Model):
+
     __tablename__   = 'roles'
     id              = db.Column(db.Integer, primary_key=True)
     name            = db.Column(db.String(16), unique=True, nullable=False)
@@ -55,6 +66,7 @@ class Role(db.Model):
 
 
 class UserRoles(db.Model):
+
     __tablename__ = 'user_roles'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))

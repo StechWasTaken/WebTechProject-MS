@@ -16,7 +16,7 @@ def index():
     if current_user.is_authenticated:
         role = getRole(current_user.id)
 
-    return render_template('home.html', role = role)
+    return render_template('home.html', role = role, name = current_user.username)
 
 if __name__ == "__main__":
     app.run(debug=True)
