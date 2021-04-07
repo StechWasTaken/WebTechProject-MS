@@ -12,11 +12,13 @@ from flask_login import current_user
 
 @app.route('/')
 def index():
-    role = 'geen'
+    role = ''
+    name = ''
     if current_user.is_authenticated:
         role = getRole(current_user.id)
+        name = current_user.username
 
-    return render_template('home.html', role = role, name = current_user.username)
+    return render_template('home.html', role = role, name = name)
 
 if __name__ == "__main__":
     app.run(debug=True)

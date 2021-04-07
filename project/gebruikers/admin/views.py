@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from flask.blueprints import Blueprint
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -15,9 +15,12 @@ admin_blueprint = Blueprint('administrator',
 
 class AdminModelView(ModelView):
     def is_accessible(self):
-        if getRole(current_user.id) == "admin":
-            return True
-        return False
+        if current_user.is_authenticated:
+            if getRole(current_user.id) == "admin":
+                return True
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('standaard.login'))
 
 admin = Admin(app)
 admin.add_view(AdminModelView(User, db.session))
