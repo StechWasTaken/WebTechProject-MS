@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1>{{ lecture }}</h1>
+<div class="jumbotron m-0">
+    <h1><i class="fas fa-book"></i> Cursus {{ lecture.language }}</h1>
+</div>
 
 <div class="col-sm-12">
 
-<a href="{{ url_for('standaard.inschrijven', language_id=lecture.language_id, lecture_id=lecture.id)}}" class="btn btn-dark">Inschrijven</a>
+
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('student.inschrijven', language_id=lecture.language_id, lecture_id=lecture.id)}}" class="btn btn-dark">Inschrijven</a>
+{% endif %}
 
 </div>
 
