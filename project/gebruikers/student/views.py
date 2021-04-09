@@ -4,6 +4,7 @@ from flask.blueprints import Blueprint
 from flask_login import login_user, login_required, logout_user, current_user
 from project.models import *
 from project import *
+from .forms import *
 
 student_blueprint = Blueprint('student',
                              __name__,
@@ -40,3 +41,21 @@ def inschrijven(language_id, lecture_id):
         flash('Inschrijven mislukt.')
         return redirect(url_for('standaard.cursus', language=language, lecture_id=lecture_id))
     return redirect(url_for('student.inschrijvingen', username=current_user.username))
+
+@student_blueprint.route('/instellingen', methods=['GET', 'POST'])
+@login_required
+def instellingen():
+    user = User.query.filter_by(id=current_user.id).first()
+    
+    username_form = AlterUsernameForm()
+    email_form = AlterEmailForm()
+    password_form = AlterPasswordForm()
+
+    if username_form.validate_on_submit():
+        flash('username changed')
+    if email_form.validate_on_submit():
+        flash('email changed')
+    if password_form.validate_on_submit():
+        flash('password changed')
+
+    return render_template('instellingen.html', username_form=username_form, email_form=email_form, password_form=password_form) 
