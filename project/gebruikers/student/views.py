@@ -17,6 +17,7 @@ student_blueprint = Blueprint('student',
 @role_required('student')
 def rooster():
     # code voor rooster
+    return
     
 @student_blueprint.route('/inschrijvingen/<username>')
 @login_required
