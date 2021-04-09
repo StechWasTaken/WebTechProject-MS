@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask.blueprints import Blueprint
 from project.models import *
+from flask_login import current_user
 
 # de app moet hier geïnitialiseerd worden, niet in app.py, hier pakt hij __name__ goed
 app = Flask(__name__)
@@ -32,4 +33,3 @@ from project.views import standaard_blueprint
 app.register_blueprint(student_blueprint, url_prefix="/student")
 app.register_blueprint(standaard_blueprint)
 app.register_blueprint(admin_blueprint)
-

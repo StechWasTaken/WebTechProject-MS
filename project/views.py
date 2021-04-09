@@ -4,7 +4,6 @@ from flask_login import login_user, login_required, logout_user
 from project.forms import *
 from project.models import *
 from project import app
-from flask_user import roles_required
 
 standaard_blueprint = Blueprint('standaard',
                              __name__,
@@ -55,6 +54,10 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
+
+        #role toevoegen
+        user = User.query.filter_by(email=form.email.data).first()
+        addRole(user.id, 'student')
 
         return redirect(url_for('standaard.login'))
 

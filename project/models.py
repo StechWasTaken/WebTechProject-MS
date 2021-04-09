@@ -18,11 +18,11 @@ def load_user(user_id):
 
 def addRole(uid, rolename):
     """ adds a role to user, in UserRoles table"""
-    user = User.query.filter_by(user_id=uid).first()
-    role = Role.query.filter_by(role.name == rolename).first()
-    userrole = UserRoles(user.id, role.id)
+    user = User.query.filter_by(id=uid).first()
+    role = Role.query.filter_by(name = rolename).first()
+    userrole = UserRoles(user_id = user.id, role_id = role.id)
     db.session.add(userrole)
-    de.session.commit()
+    db.session.commit()
 
 def getRole(uid):
     """ gets role name """
