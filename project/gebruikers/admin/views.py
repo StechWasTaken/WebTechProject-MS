@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, current_app
 from flask.blueprints import Blueprint
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
@@ -21,7 +21,7 @@ class MyAdminIndexView(AdminIndexView):
                 return True
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('standaard.login'))
+        return current_app.login_manager.unauthorized()
 
 class AdminModelView(ModelView):
     def is_accessible(self):
@@ -30,7 +30,7 @@ class AdminModelView(ModelView):
                 return True
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('standaard.login'))
+        return current_app.login_manager.unauthorized()
 
 
 #views

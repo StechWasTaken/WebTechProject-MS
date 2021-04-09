@@ -3,8 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager
-from flask_login import UserMixin
+from flask_login import LoginManager, UserMixin
 
 
 db = SQLAlchemy()
@@ -14,21 +13,6 @@ login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-
-
-def addRole(uid, rolename):
-    """ adds a role to user, in UserRoles table"""
-    user = User.query.filter_by(id=uid).first()
-    role = Role.query.filter_by(name = rolename).first()
-    userrole = UserRoles(user_id = user.id, role_id = role.id)
-    db.session.add(userrole)
-    db.session.commit()
-
-def getRole(uid):
-    """ gets role name """
-    user = UserRoles.query.filter_by(user_id=uid).first()
-    role = Role.query.filter_by(id = user.role_id).first()
-    return role.name
     
 
 class User(db.Model, UserMixin):

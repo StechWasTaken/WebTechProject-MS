@@ -4,6 +4,7 @@ from flask import Flask, render_template, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from project.models import *
 from flask_login import current_user
+from project.roles import *
 
 
 # app.register_blueprint(bp_docent)
