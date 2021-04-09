@@ -55,7 +55,7 @@ def register():
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
 
-        #role toevoegen
+        # student role toevoegen
         user = User.query.filter_by(email=form.email.data).first()
         addRole(user.id, 'student')
 

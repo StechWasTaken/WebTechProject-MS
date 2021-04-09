@@ -6,7 +6,7 @@ from project import app
 from functools import wraps
 
 # weet niet waar dit moet, dus dit mag verplaatst worden :)
-# kan misschien anders en mooier, maar dit werkt iig
+# dit werkt nog niet
 def role_required(role="ANY"):
     def wrapper(func):
         @wraps(func)

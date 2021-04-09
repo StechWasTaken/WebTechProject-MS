@@ -9,7 +9,7 @@ student_blueprint = Blueprint('student',
                              template_folder='templates/student')
 
 @student_blueprint.route('/student/rooster')
-@role_required('student')
+# @role_required('student')
 def rooster():
     # code voor rooster
 
