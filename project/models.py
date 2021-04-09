@@ -3,8 +3,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager
-from flask_login import UserMixin
+from flask_login import LoginManager, UserMixin
+
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -13,6 +13,7 @@ login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+    
 
 class User(db.Model, UserMixin):
 
@@ -33,37 +34,46 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-class Admin(db.Model):
-    __tablename__ = 'admin'
-    id = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.Text, nullable=False)
-    username    = db.Column(db.Text, nullable=False)
-    password    = db.Column(db.Text, nullable=False)
+    
 
-    def __init__(self, username, email, password):
-        self.username   = username
-        self.email      = email
-        self.password   = generate_password_hash(password)
+class Role(db.Model):
+
+    __tablename__   = 'roles'
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(16), unique=True, nullable=False)
+
+    def __init__(self, role):
+        self.name = name
 
     def __repr__(self):
-        return f"<Admin email={self.email} username={self.username}>"
+        return f"<Role ={self.name}>"
+
+
+class UserRoles(db.Model):
+
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
+
 
 
 class Teacher(db.Model):
 
     __tablename__ = 'teachers'
-    id = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.Text, nullable=False)
-    username    = db.Column(db.Text, nullable=False)
-    password    = db.Column(db.Text, nullable=False)
+    id          = db.Column(db.Integer, primary_key=True)
+    email       = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    username    = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    password    = db.Column(db.String(128), nullable=False)
 
     def __init__(self, username, email, password):
+        self.id         = id
         self.username   = username
         self.email      = email
         self.password   = generate_password_hash(password)
 
     def __repr__(self):
-        return f"<Teacher email={self.email} username={self.username}>"
+        return f"<Teacher id = {self.teacher_id}>"
 
 class Language(db.Model):
 
@@ -76,6 +86,7 @@ class Language(db.Model):
 
     def __repr__(self):
         return f"<Language language={self.language}>"
+
 
 class Lecture(db.Model):
 
@@ -93,9 +104,23 @@ class Lecture(db.Model):
     def __repr__(self):
         return f"<Lecture start_time={self.start_time} location={self.location}>"
 
+# # association table: LECTURES <-> ATTENDANTS <-> USERS
+# lecture_attendants = db.Table(
+#     "lecture_attendants",
+#     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+#     db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
+# )
+
 # association table: LECTURES <-> ATTENDANTS <-> USERS
-lecture_attendants = db.Table(
-    "lecture_attendants",
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
-    db.Column("lecture_id", db.Integer, db.ForeignKey("lectures.id"), primary_key=True),
-)
+class Attendee(db.Model):
+    
+    __tablename__ = 'attendees'
+    user_id     = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    lecture_id  = db.Column(db.Integer, db.ForeignKey("lectures.id"), primary_key=True)
+
+    def __init__(self, user_id, lecture_id):
+        self.user_id = user_id
+        self.lecture_id = lecture_id
+
+    def __repr__(self):
+        return f"<Attendee user_id={self.user_id} lecture_id={self.lecture_id}>"

@@ -1,16 +1,45 @@
-from flask import render_template
+from flask import render_template, flash, redirect, url_for, current_app
 from flask.blueprints import Blueprint
-# from project import db
-# from project.model import Rooster
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_login import current_user, login_required
+from project.models import *
+from project import app
+from project.roles import *
 
-# rooster, cursussen en talen toevoegen, docentgegevens bewerken
+# /admin
 
-admin_blueprint = Blueprint('admin',
+admin_blueprint = Blueprint('administrator',
                              __name__,
                              template_folder='templates/admin')
 
-@admin_blueprint.route('/admin/rooster')
-def rooster():
-    # code voor rooster
 
-    return render_template('rooster.html')
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        if current_user.is_authenticated:
+            if getRole(current_user.id) == "admin":
+                return True
+
+    def inaccessible_callback(self, name, **kwargs):
+        return current_app.login_manager.unauthorized()
+
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        if current_user.is_authenticated:
+            if getRole(current_user.id) == "admin":
+                return True
+
+    def inaccessible_callback(self, name, **kwargs):
+        return current_app.login_manager.unauthorized()
+
+
+#views
+admin = Admin(app, index_view=MyAdminIndexView())
+admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(Role, db.session))
+admin.add_view(AdminModelView(UserRoles, db.session))
+admin.add_view(AdminModelView(Language, db.session))
+admin.add_view(AdminModelView(Lecture, db.session))
+
+# misschien dat we dit ook zo kunnen maken dat het voor de admin makkelijker is om dingen toe te voegen
+# ga ik nog naar kijken

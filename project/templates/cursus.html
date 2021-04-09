@@ -1,36 +1,17 @@
-{% extends "base.html" %} 
-
-{% block header %}
-  <h1>{% block title %}Cursussen{% endblock %}</h1>
-{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-
-<div class="jumbotron">
-    <h1 class = "blueheader">Cursussen</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Taal</th>
-                <th scope="col">Docent</th>
-                <th scope="col">Datum</th>
-                <th scope="col">Locatie</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for lecture in lectures %}
-            <tr>
-                <td>{{ lecture.language }}</td>
-                <td>{{ lecture.username }}</td>
-                <td>{{ lecture.start_time }}</td>
-                <td>{{ lecture.location }}</td>
-                <td><a href='#' class="btn btn-dark">Aanmelden</a></td> <!---moet nog een dynamische link aanmaken--->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="jumbotron m-0">
+    <h1><i class="fas fa-book"></i> Cursus {{ lecture.language }}</h1>
 </div>
-{% endblock %}
 
+<div class="col-sm-12">
+
+
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('student.inschrijven', language_id=lecture.language_id, lecture_id=lecture.id)}}" class="btn btn-dark">Inschrijven</a>
+{% endif %}
+
+</div>
+
+{% endblock %}

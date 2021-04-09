@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron m-0">
+    <h1>Jouw inschrijvingen:</h1>
+
+    <div class="row">
+        <div class="col col-sm-10">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Taal</th>
+                        <th scope="col">Docent</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Locatie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inschrijving in inschrijvingen %}
+                    <tr>
+                        <td>{{ inschrijving.language }}</td>
+                        <td>{{ inschrijving.username }}</td>
+                        <td>{{ inschrijving.start_time }}</td>
+                        <td>{{ inschrijving.location }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col col-sm-2">
+            <a href="{{ url_for('standaard.cursussen') }}" class="btn btn-dark">Cursussen</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

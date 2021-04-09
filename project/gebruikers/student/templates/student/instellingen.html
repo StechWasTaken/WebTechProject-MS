@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron m-0" my-auto>
+    <form method="POST">
+        {{ username_form.hidden_tag() }}
+        <div class="form-group row">
+            {{ username_form.username.label(class="col-sm-2 col-form-label") }} 
+            <div class="col-sm-10">
+                {{ username_form.username(class="form-control", value=current_user.username) }}<br>
+                {{ username_form.submit(class="btn btn-dark") }}
+            </div>
+        </div>
+    </form>
+    <form method="POST">
+        {{ email_form.hidden_tag() }}
+        <div class="form-group row">
+            {{ email_form.email.label(class="col-sm-2 col-form-label") }} 
+            <div class="col-sm-10">
+                {{ email_form.email(class="form-control", value=current_user.email) }}<br>
+                {{ email_form.submit(class="btn btn-dark") }}
+            </div>
+        </div>
+    </form>
+    <form method="POST">
+        {{ password_form.hidden_tag() }}
+        <div class="form-group">
+            <div class="row pt-1">
+                {{ password_form.old_password.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-10">
+                    {{ password_form.old_password(class="form-control", value=current_user.email) }}
+                </div>
+            </div>
+            <div class="row pt-1">
+                {{ password_form.new_password.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-10">
+                    {{ password_form.new_password(class="form-control", value=current_user.email) }}
+                </div>
+            </div>
+            <div class="row pt-1">
+                {{ password_form.new_pass_confirm.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-10">
+                    {{ password_form.new_pass_confirm(class="form-control", value=current_user.email) }}<br>
+                    {{ password_form.submit(class="btn btn-dark") }}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
