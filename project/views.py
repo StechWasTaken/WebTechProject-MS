@@ -37,7 +37,8 @@ def cursus(language, lecture_id):
 def login():
     # code voor login
     form = LoginForm()
-    if request.method != 'POST':
+
+    if request.method != 'POST' and request.method != 'GET':
         resp = make_response(render_template('login.html', form=form))
         resp.set_cookie('referrer', request.headers.get("Referer"))
         return resp
