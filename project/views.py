@@ -13,35 +13,38 @@ standaard_blueprint = Blueprint('standaard',
 @standaard_blueprint.route('/cursussen')
 def cursussen():
     # code voor cursus
-    lectures =  Lecture.query\
-                .join(Language, Lecture.language_id == Language.id)\
-                .join(Teacher, Lecture.teacher_id == Teacher.id)\
-                .add_columns(Lecture.id, Language.language, Teacher.username, Lecture.start_time, Lecture.location)
+    courses =  Course.query\
+                .join(Language, Course.language_id == Language.id)\
+                .join(Teacher, Course.teacher_id == Teacher.id)\
+                .add_columns(Course.id, Language.language, Teacher.username, Course.location)
 
-    return render_template('cursussen.html', lectures=lectures)
+    return render_template('cursussen.html', courses=courses)
 
-@standaard_blueprint.route('/cursus/<language>/<lecture_id>')
-def cursus(language, lecture_id):
+@standaard_blueprint.route('/cursus/<language>/<course_id>')
+def cursus(language, course_id):
     if current_user.is_anonymous:
         flash(Markup('U moet eerst inloggen of registreren voordat u zich kan inschrijven voor een cursus. <br> Registreren kan <b><a href="' + url_for('standaard.register') + '">hier</a></b>! <br><br> <b><a href="' + url_for('standaard.login') + '">Inloggen</a></b>'))
 
-    lecture =   Lecture.query\
-                .filter_by(id=lecture_id)\
-                .join(Language, Lecture.language_id == Language.id)\
-                .join(Teacher, Lecture.teacher_id == Teacher.id)\
-                .add_columns(Lecture.id, Lecture.language_id, Language.language, Teacher.username, Lecture.start_time, Lecture.location).first_or_404()
+    course =   Course.query\
+                .filter_by(id=course_id)\
+                .join(Language, Course.language_id == Language.id)\
+                .join(Teacher, Course.teacher_id == Teacher.id)\
+                .add_columns(Course.id, Course.language_id, Language.language, Teacher.username, Course.location).first_or_404()
     
-    return render_template('cursus.html', lecture=lecture)
+    return render_template('cursus.html', course=course)
 
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     # code voor login
     form = LoginForm()
 
-    if request.method != 'POST' and request.method != 'GET':
-        resp = make_response(render_template('login.html', form=form))
-        resp.set_cookie('referrer', request.headers.get("Referer"))
-        return resp
+    if request.method != 'POST':    # toch maar de try en except gebruikt ipv !='GET', want anders gaat hij nooit verder
+        try:
+            resp = make_response(render_template('login.html', form=form))
+            resp.set_cookie('referrer', request.headers.get("Referer"))
+            return resp
+        except:
+            print("cookie exception")
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -74,15 +77,12 @@ def register():
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    role_id=1)
 
         db.session.add(user)
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
-
-        # student role toevoegen
-        user = User.query.filter_by(email=form.email.data).first()
-        addRole(user.id, 'student')
 
         return redirect(url_for('standaard.login'))
 

@@ -24,6 +24,16 @@ login_manager.login_view = 'standaard.login'
 
 with app.app_context():
     db.create_all()
+    try:
+        student = Role(name='student')
+        docent = Role(name='docent')
+        admin = Role(name='admin')
+        db.session.add(student)
+        db.session.add(docent)
+        db.session.add(admin)
+        db.session.commit()
+    except:
+        print('roles already exist')
  
 # Blueprints
 from project.gebruikers.student.views import student_blueprint
@@ -32,4 +42,4 @@ from project.views import standaard_blueprint
 
 app.register_blueprint(student_blueprint, url_prefix="/student")
 app.register_blueprint(standaard_blueprint)
-app.register_blueprint(admin_blueprint)
+app.register_blueprint(admin_blueprint, url_prefix="/admin")
