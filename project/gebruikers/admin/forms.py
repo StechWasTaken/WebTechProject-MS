@@ -17,7 +17,7 @@ class AddCourseForm(FlaskForm):
 class AddLectureForm(FlaskForm):
     """ course_id', start_time, end_time, lecture_name)
     """
-    course_name = StringField('Course Name', validators=[DataRequired()])
+    course_id = StringField('Course Name', validators=[DataRequired()])
     start_time = DateTimeField('Start Time', validators=[DataRequired()])
     end_time = DateTimeField('End Time', validators=[DataRequired()])
     lecture_name = StringField('Lecture Name', validators=[DataRequired()])
