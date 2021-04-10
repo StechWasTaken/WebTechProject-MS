@@ -2,7 +2,28 @@
 
 {% block content %}
 
-    <h1> Rooster </h1>
+<div class="jumbotron m-0">
+    <table class="table">
+        <thead>
+            <tr>
+                <td></td>
+                {% for date in dates %}
+                    <td>{{ date.strftime('%A, %d %B') }}</td>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for hour in range(9, 22) %}
+                <tr>
+                    <td>{{ hour }}:00</td>
+                    {% for day in dates %}
+                        <td></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
 
