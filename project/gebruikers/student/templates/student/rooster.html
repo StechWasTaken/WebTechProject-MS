@@ -24,8 +24,14 @@
             {% for hour in range(9, 22) %}
                 <tr>
                     <td>{{ hour }}:00</td>
-                    {% for day in dates %}
-                        <td></td>
+                    {% for date in dates %}
+                        <td>
+                            {% for lecture in lectures %}
+                                {% if hour == lecture.start_time.hour and date.day == lecture.start_time.day and date.month == lecture.start_time.month and date.year == lecture.start_time.year %}
+                                    {{ lecture.language }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
                     {% endfor %}
                 </tr>
             {% endfor %}

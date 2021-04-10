@@ -32,6 +32,18 @@ def rooster(year, week):
                     if date not in dates:
                         dates.append(date)
 
+    student = db.session.query(User.id).filter(User.id == current_user.id).subquery('student')
+
+    lectures =  Attendee.query\
+                .join(Course, Course.id == Attendee.course_id)\
+                .join(Language, Language.id == Course.language_id)\
+                .join(User, User.id == Course.teacher_id)\
+                .join(Lecture, Lecture.id == Course.id)\
+                .join(student, student.c.id == Attendee.user_id)\
+                .add_columns(Language.language, User.username, Lecture.start_time, Lecture.end_time, Lecture.lecture_name)\
+                .filter(Lecture.start_time >= dates[0], Lecture.start_time <= dates[len(dates)-1])\
+                .all()
+
     if current_week-1 < 1:
         if datetime(current_year-1, 12, 28).isocalendar()[1] == 53:
             previous = (current_year-1, 53)
@@ -48,7 +60,7 @@ def rooster(year, week):
     else:
         next = (current_year, current_week+1)
 
-    return render_template('rooster.html', dates=dates, current_day=current_day, previous=previous, next=next)
+    return render_template('rooster.html', dates=dates, current_day=current_day, previous=previous, next=next, lectures=lectures)
     
 @student_blueprint.route('/inschrijvingen/<username>')
 @login_required
