@@ -15,8 +15,8 @@ def cursussen():
     # code voor cursus
     courses =  Course.query\
                 .join(Language, Course.language_id == Language.id)\
-                .join(Teacher, Course.teacher_id == Teacher.id)\
-                .add_columns(Course.id, Language.language, Teacher.username, Course.location)
+                .join(User, Course.teacher_id == User.id)\
+                .add_columns(Course.id, Language.language, User.username, Course.location)
 
     return render_template('cursussen.html', courses=courses)
 
@@ -28,8 +28,8 @@ def cursus(language, course_id):
     course =   Course.query\
                 .filter_by(id=course_id)\
                 .join(Language, Course.language_id == Language.id)\
-                .join(Teacher, Course.teacher_id == Teacher.id)\
-                .add_columns(Course.id, Course.language_id, Language.language, Teacher.username, Course.location).first_or_404()
+                .join(User, Course.teacher_id == User.id)\
+                .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location).first_or_404()
     
     return render_template('cursus.html', course=course)
 

@@ -60,23 +60,6 @@ class Role(db.Model):
         return f"<Role ={self.name}>"
 
 
-class Teacher(db.Model):
-
-    __tablename__ = 'teachers'
-    id          = db.Column(db.Integer, primary_key=True)
-    email       = db.Column(db.String(64), unique=True, index=True, nullable=False)
-    username    = db.Column(db.String(64), unique=True, index=True, nullable=False)
-    password    = db.Column(db.String(128), nullable=False)
-
-    def __init__(self, username, email, password):
-        self.id         = id
-        self.username   = username
-        self.email      = email
-        self.password   = generate_password_hash(password)
-
-    def __repr__(self):
-        return f"<Teacher id = {self.teacher_id}>"
-
 class Language(db.Model):
 
     __tablename__ = 'languages'
@@ -94,7 +77,7 @@ class Course(db.Model):
 
     __tablename__ = 'courses'
     id              = db.Column(db.Integer, primary_key=True)
-    teacher_id      = db.Column(db.Integer, db.ForeignKey("teachers.id"))
+    teacher_id      = db.Column(db.Integer, db.ForeignKey("users.id"))
     language_id     = db.Column(db.Integer, db.ForeignKey("languages.id"))
     location        = db.Column(db.Text, nullable=False)
 
