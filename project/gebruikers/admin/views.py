@@ -73,7 +73,9 @@ class AdminAddRoleView(BaseView):
 class AdminUserRolesView(AdminModelView):
     """ hier moet een overzicht van users en roles komen (liefst in een tabel)
     """
-    pass
+    column_display_pk = True # optional, but I like to see the IDs in the list
+    column_hide_backrefs = False
+    column_list = ('user_id', 'role_id')
 
 
 
@@ -83,10 +85,10 @@ admin = Admin(app, index_view=AdminHomeView())
 # add views
 admin.add_view(AdminModelView(User, db.session)) # werkt voor nu
 admin.add_view(AdminModelView(Role, db.session)) # werkt voor nu
+admin.add_view(AdminAddRoleView(name="Add Role", url="/addrole")) # werkt voor nu
 
-admin.add_view(AdminAddRoleView(name="Add Role", url="/addrole"))
+admin.add_view(AdminUserRolesView(UserRoles, db.session)) 
 
-admin.add_view(AdminModelView(UserRoles, db.session)) 
 admin.add_view(AdminModelView(Language, db.session))
 admin.add_view(AdminModelView(Lecture, db.session))
 

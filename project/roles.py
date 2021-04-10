@@ -30,16 +30,19 @@ def addRole(uid, rolename):
     """ adds a role to user, in UserRoles table"""
     user = User.query.filter_by(id=uid).first()
     role = Role.query.filter_by(name = rolename).first()
-    userrole = UserRoles(user_id = user.id, role_id = role.id)
-    print(userrole)
-    db.session.add(userrole)
+
+    # check if user exists in UserRoles, zo niet voeg toe
+    if UserRoles.query.filter_by(user_id = user.id) == "":
+        userrole = UserRoles(user_id = user.id, role_id = role.id)
+        db.session.add(userrole)
+    else: # verander de role vd user
+        user = UserRoles.query.filter_by(user_id = user.id).first()
+        user.role_id = role.id
+        db.session.add(user)
+    db.session.commit()
+
 
     # code om meer roles per user te hebben. Dit werkt op dit moment niet.
-    # # check if user exists in UserRoles, zo niet voeg toe
-    # if UserRoles.query.filter_by(user_id = user.id) == "":
-    #     userrole = UserRoles(user_id = user.id, role_id = role.id)
-    #     db.session.add(userrole)
-
     # # zo wel, append de role met de bestaande roles en voeg toe
     # # Dit werkt nog niet, daar moet de database anders voor
     # # Voor als er tijd over is
