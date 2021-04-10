@@ -33,12 +33,18 @@ def rooster(year, week):
                         dates.append(date)
 
     if current_week-1 < 1:
-        previous = (current_year-1, 52)
+        if datetime(current_year-1, 12, 28).isocalendar()[1] == 53:
+            previous = (current_year-1, 53)
+        else:
+            previous = (current_year-1, 52)
     else:
         previous = (current_year, current_week-1)
     
     if current_week+1 > 52:
-        next = (current_year+1, 1)
+        if datetime(current_year, 12, 28).isocalendar()[1] == 53 and current_week != 53:
+            next = (current_year, 53)
+        else:
+            next = (current_year+1, 1)
     else:
         next = (current_year, current_week+1)
 
