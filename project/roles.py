@@ -30,20 +30,30 @@ def addRole(uid, rolename):
     """ adds a role to user, in UserRoles table"""
     user = User.query.filter_by(id=uid).first()
     role = Role.query.filter_by(name = rolename).first()
-    # check if user exists in UserRoles, zo niet voeg toe
-    if UserRoles.query.filter_by(user_id = user.id) == "":
-        userrole = UserRoles(user_id = user.id, role_id = role.id)
-        db.session.add(userrole)
-    # zo wel, append de role met de bestaande roles en voeg toe
-    # weet nog niet zeker of dit werkt, moet nog getest worden als ik addRole kan gebruiken als admin
-    else:
-        existing_user = UserRoles.query.filter_by(user_id = user.id)
-        existing_roles = user.role_id
-        existing_roles.append(role.id)
-        existing_user.role_id = existing_roles
-        db.session.add(existing_user)
+    userrole = UserRoles(user_id = user.id, role_id = role.id)
+    print(userrole)
+    db.session.add(userrole)
 
-    db.session.commit()
+    # code om meer roles per user te hebben. Dit werkt op dit moment niet.
+    # # check if user exists in UserRoles, zo niet voeg toe
+    # if UserRoles.query.filter_by(user_id = user.id) == "":
+    #     userrole = UserRoles(user_id = user.id, role_id = role.id)
+    #     db.session.add(userrole)
+
+    # # zo wel, append de role met de bestaande roles en voeg toe
+    # # Dit werkt nog niet, daar moet de database anders voor
+    # # Voor als er tijd over is
+
+    #  else:
+    #      existing_user = UserRoles.query.filter_by(user_id = user.id).first()
+    #      existing_roles = existing_user.role_id
+    #      if type(existing_roles) == int:
+    #          existing_roles = [existing_roles]
+    #      existing_roles.append(role.id)
+    #      existing_user.role_id = existing_roles
+    #      db.session.add(existing_user)
+
+    # db.session.commit()
 
 
 def getRole(uid):

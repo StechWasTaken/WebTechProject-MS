@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password, password)
 
 # toegevoegd om in admin het password te hashen bij toevoegen user, kan ook gebruikt worden voor wijzigen wachtwoord
-# iedere keer dat het password gewijzigd wordt, wordt het opnieuw gehasht
+# iedere keer dat het password gewijzigd wordt, wordt het opnieuw
 @event.listens_for(User.password, 'set', retval=True)
 def hash_user_password(target, value, oldvalue, initiator):
     if value != oldvalue:

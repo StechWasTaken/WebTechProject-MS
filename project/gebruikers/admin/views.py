@@ -1,11 +1,12 @@
-from flask import current_app
+from flask import current_app, flash
 from flask.blueprints import Blueprint
-from flask_admin import Admin, AdminIndexView, expose
+from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from project.models import *
 from project import app
 from project.roles import *
+from project.gebruikers.admin.forms import *
 
 # /admin
 
@@ -42,12 +43,37 @@ class AdminModelView(ModelView):
 
 
 
-class AdminAddRoleView(AdminModelView):
-    """ hoe doe je dit xD AdminModelView? BaseView?
-    Een view maken naar een pagina met een form om AddRole te gebruiken?
+class AdminAddRoleView(BaseView):
+    """ Een pagina met een form om AddRole te gebruiken, admin kan hier een role aan een user toevoegen
     """
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        # code voor de form
+        form = AddRoleForm()
+        if form.validate_on_submit():
+            username = form.username.data
+            user = User.query.filter_by(username = username).first()
+            rolename = form.rolename.data
+            role = Role.query.filter_by(name = rolename)
+            # check of user en role bestaan in de andere tabellen
+            if user == "":
+                flash("username niet correct")
+            elif role == "":
+                flash("Role bestaat niet")
+            else:
+                addRole(user.id, rolename)
+                flash('Gelukt!')
+
+        return self.render('addrole.html', form=form)
+
+
+
     pass
 
+class AdminUserRolesView(AdminModelView):
+    """ hier moet een overzicht van users en roles komen (liefst in een tabel)
+    """
+    pass
 
 
 
@@ -57,6 +83,9 @@ admin = Admin(app, index_view=AdminHomeView())
 # add views
 admin.add_view(AdminModelView(User, db.session)) # werkt voor nu
 admin.add_view(AdminModelView(Role, db.session)) # werkt voor nu
+
+admin.add_view(AdminAddRoleView(name="Add Role", url="/addrole"))
+
 admin.add_view(AdminModelView(UserRoles, db.session)) 
 admin.add_view(AdminModelView(Language, db.session))
 admin.add_view(AdminModelView(Lecture, db.session))
