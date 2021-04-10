@@ -1,8 +1,8 @@
-from flask import render_template, flash, redirect, url_for, current_app
+from flask import current_app
 from flask.blueprints import Blueprint
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user, login_required
+from flask_login import current_user
 from project.models import *
 from project import app
 from project.roles import *
@@ -31,6 +31,7 @@ class AdminHomeView(AdminIndexView):
 
 class AdminModelView(ModelView):
     """ Eigen modelview die checkt op admin role, zodat alleen admins erbij kunnen"""
+
     def is_accessible(self):
         if current_user.is_authenticated:
             if getRole(current_user.id) == "admin":
@@ -42,8 +43,8 @@ class AdminModelView(ModelView):
 
 
 class AdminAddRoleView(AdminModelView):
-    """ hoe doe je dit xD AdminModelView? Iets anders?
-    Een view maken naar een pagina met een form om AddRole te gebruiken
+    """ hoe doe je dit xD AdminModelView? BaseView?
+    Een view maken naar een pagina met een form om AddRole te gebruiken?
     """
     pass
 
@@ -55,8 +56,8 @@ admin = Admin(app, index_view=AdminHomeView())
 
 # add views
 admin.add_view(AdminModelView(User, db.session)) # werkt voor nu
-admin.add_view(AdminModelView(Role, db.session))
-admin.add_view(AdminModelView(UserRoles, db.session))
+admin.add_view(AdminModelView(Role, db.session)) # werkt voor nu
+admin.add_view(AdminModelView(UserRoles, db.session)) 
 admin.add_view(AdminModelView(Language, db.session))
 admin.add_view(AdminModelView(Lecture, db.session))
 

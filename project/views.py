@@ -84,8 +84,8 @@ def register():
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
 
         # student role toevoegen
-        user = User.query.filter_by(email=form.email.data).first()
-        addRole(user.id, 'student')
+        # user = User.query.filter_by(email=form.email.data).first()
+        # addRole(user.id, 'student')
 
         return redirect(url_for('standaard.login'))
 
