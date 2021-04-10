@@ -65,14 +65,22 @@ class AdminRoleView(AdminModelView):
     can_delete = False
 
 class AdminLanguageView(AdminModelView):
-    pass
+    column_display_pk = True
+    # column_hide_backrefs = False
+    column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
-    pass
+    column_display_pk = True 
+    # column_hide_backrefs = False
+    column_list = ['teacher_id', 'language_id', 'location']
+    form_columns = ('teacher_id', 'language_id', 'location')
 
 
 class AdminLectureView(AdminModelView):
-    pass
+    column_display_pk = True 
+    # column_hide_backrefs = False
+    column_list = ['course_id', 'start_time', 'end_time', 'lecture_name']
+    form_columns = ('course_id', 'start_time', 'end_time', 'lecture_name')
 
 
 admin = Admin(app, index_view=AdminHomeView())
