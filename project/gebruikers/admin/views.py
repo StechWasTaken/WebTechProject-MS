@@ -64,31 +64,15 @@ class AdminRoleView(AdminModelView):
     can_create = False
     can_delete = False
 
-class AdminAddRoleView(BaseView):
-    """ Een pagina met een form om AddRole te gebruiken, admin kan hier een role aan een user toevoegen
-    """
-    @expose('/', methods=['GET', 'POST'])
-    def index(self):
-        # code voor de form
-        form = AddRoleForm()
-        if form.validate_on_submit():
-            username = form.username.data
-            user = User.query.filter_by(username = username).first()
-            rolename = form.rolename.data
-            role = Role.query.filter_by(name = rolename)
-            # check of user en role bestaan in de andere tabellen
-            if user == "":
-                flash("username niet correct")
-            elif role == "":
-                flash("Role bestaat niet")
-            else:
-                addRole(user.id, rolename)
-                flash('Gelukt!')
+class AdminLanguageView(AdminModelView):
+    pass
 
-        return self.render('addrole.html', form=form)
+class AdminCourseView(AdminModelView):
+    pass
 
 
-
+class AdminLectureView(AdminModelView):
+    pass
 
 
 admin = Admin(app, index_view=AdminHomeView())
@@ -97,8 +81,9 @@ admin = Admin(app, index_view=AdminHomeView())
 admin.add_view(AdminUserView(User, db.session)) # werkt voor nu
 admin.add_view(AdminRoleView(Role, db.session)) # werkt voor nu
 
-admin.add_view(AdminModelView(Language, db.session))
-admin.add_view(AdminModelView(Lecture, db.session))
+admin.add_view(AdminLanguageView(Language, db.session))
+admin.add_view(AdminCourseView(Course, db.session))
+admin.add_view(AdminLectureView(Lecture, db.session))
 
 
 # misschien dat we dit ook zo kunnen maken dat het voor de admin makkelijker is om dingen toe te voegen

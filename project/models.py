@@ -60,7 +60,6 @@ class Role(db.Model):
         return f"<Role ={self.name}>"
 
 
-
 class Teacher(db.Model):
 
     __tablename__ = 'teachers'
