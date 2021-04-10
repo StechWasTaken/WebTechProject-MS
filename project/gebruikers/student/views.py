@@ -53,9 +53,9 @@ def inschrijvingen(username):
     inschrijvingen =    Attendee.query\
                         .filter_by(user_id=current_user.id)\
                         .join(Course, Course.id == Attendee.course_id)\
-                        .join(Teacher, Teacher.id == Course.teacher_id)\
+                        .join(User, User.id == Course.teacher_id)\
                         .join(Language, Language.id == Course.language_id)\
-                        .add_columns(Course.id, Language.language, Teacher.username, Course.location)
+                        .add_columns(Course.id, Language.language, User.username, Course.location)
 
     return render_template('inschrijvingen.html', inschrijvingen=inschrijvingen)
 
