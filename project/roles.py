@@ -35,6 +35,7 @@ def addRole(uid, rolename):
         userrole = UserRoles(user_id = user.id, role_id = role.id)
         db.session.add(userrole)
     # zo wel, append de role met de bestaande roles en voeg toe
+    # weet nog niet zeker of dit werkt, moet nog getest worden als ik addRole kan gebruiken als admin
     else:
         existing_user = UserRoles.query.filter_by(user_id = user.id)
         existing_roles = user.role_id
