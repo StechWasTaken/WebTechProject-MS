@@ -35,16 +35,21 @@
     <div class="col">
       <div class="container-fluid">
         <h1 class = "whitetext">Welkom {{role}} {{name}}!</h1> <!--username? andere pagina?-->
-      </div>    
+      </div>
+      {% if role == "admin" %}
+      <div class="container-fluid">
+        <a href="{{ url_for('admin.index') }}"><h1 class = "whitetext">Admin Panel</h1></a>
+      </div>
+      {% endif %}    
     {% else %}
-    <div class="col">
-      <div class="container-fluid">
-        <a href="{{ url_for('standaard.login') }}"><h1 class = "whitetext">Login</h1></a>
+      <div class="col">
+        <div class="container-fluid">
+          <a href="{{ url_for('standaard.login') }}"><h1 class = "whitetext">Login</h1></a>
+        </div>
+        <div class="container-fluid">
+          <a href="{{ url_for('standaard.register') }}"><h1 class = "whitetext">Registreren</h1></a>
+        </div>
       </div>
-      <div class="container-fluid">
-        <a href="{{ url_for('standaard.register') }}"><h1 class = "whitetext">Registreren</h1></a>
-      </div>
-    </div>
     {% endif %}
   </div>
 

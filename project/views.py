@@ -15,8 +15,8 @@ def cursussen():
     # code voor cursus
     courses =  Course.query\
                 .join(Language, Course.language_id == Language.id)\
-                .join(Teacher, Course.teacher_id == Teacher.id)\
-                .add_columns(Course.id, Language.language, Teacher.username, Course.location)
+                .join(User, Course.teacher_id == User.id)\
+                .add_columns(Course.id, Language.language, User.username, Course.location)
 
     return render_template('cursussen.html', courses=courses)
 
@@ -28,8 +28,8 @@ def cursus(language, course_id):
     course =   Course.query\
                 .filter_by(id=course_id)\
                 .join(Language, Course.language_id == Language.id)\
-                .join(Teacher, Course.teacher_id == Teacher.id)\
-                .add_columns(Course.id, Course.language_id, Language.language, Teacher.username, Course.location).first_or_404()
+                .join(User, Course.teacher_id == User.id)\
+                .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location).first_or_404()
     
     return render_template('cursus.html', course=course)
 
@@ -38,10 +38,13 @@ def login():
     # code voor login
     form = LoginForm()
 
-    if request.method != 'POST' and request.method != 'GET':
-        resp = make_response(render_template('login.html', form=form))
-        resp.set_cookie('referrer', request.headers.get("Referer"))
-        return resp
+    if request.method != 'POST':    # toch maar de try en except gebruikt ipv !='GET', want anders gaat hij nooit verder
+        try:
+            resp = make_response(render_template('login.html', form=form))
+            resp.set_cookie('referrer', request.headers.get("Referer"))
+            return resp
+        except:
+            print("cookie exception")
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -74,15 +77,12 @@ def register():
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    role_id=1)
 
         db.session.add(user)
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
-
-        # student role toevoegen
-        user = User.query.filter_by(email=form.email.data).first()
-        addRole(user.id, 'student')
 
         return redirect(url_for('standaard.login'))
 
