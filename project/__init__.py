@@ -32,4 +32,4 @@ from project.views import standaard_blueprint
 
 app.register_blueprint(student_blueprint, url_prefix="/student")
 app.register_blueprint(standaard_blueprint)
-app.register_blueprint(admin_blueprint)
+app.register_blueprint(admin_blueprint, url_prefix="/admin")

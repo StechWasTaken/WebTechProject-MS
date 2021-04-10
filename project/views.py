@@ -33,6 +33,7 @@ def cursus(language, lecture_id):
     
     return render_template('cursus.html', lecture=lecture)
 
+# hij gaat na het inloggen terug naar het inlog scherm, moet veranderd worden !!BELANGRIJK!!
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     # code voor login

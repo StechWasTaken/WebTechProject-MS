@@ -6,7 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from project import app
 from functools import wraps
 
-# weet niet waar dit moet, dus dit mag verplaatst worden :)
+# Dit is de plek waar alle role gerelateerde code staat
+
+
 def role_required(role="ANY"):
     """maakt een wrapper waar de role gecheckt wordt
     als de current_user niet de juiste role heeft krijgt hij een unauthorized pagina te zien

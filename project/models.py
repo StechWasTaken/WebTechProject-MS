@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, event
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin
@@ -13,7 +13,7 @@ login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-    
+
 
 class User(db.Model, UserMixin):
 
@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     def __init__(self, username, email, password):
         self.username   = username
         self.email      = email
-        self.password   = generate_password_hash(password)
+        self.password   = password
 
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
@@ -34,7 +34,13 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    
+# toegevoegd om in admin het password te hashen bij toevoegen user, kan ook gebruikt worden voor wijzigen wachtwoord
+@event.listens_for(User.password, 'set', retval=True)
+def hash_user_password(target, value, oldvalue, initiator):
+    if value != oldvalue:
+        return generate_password_hash(value)
+    return value
+        
 
 class Role(db.Model):
 
