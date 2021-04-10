@@ -81,8 +81,9 @@ class Course(db.Model):
     language_id     = db.Column(db.Integer, db.ForeignKey("languages.id"))
     location        = db.Column(db.Text, nullable=False)
 
-    def __init__(self, start_time, location):
-        self.start_time = start_time
+    def __init__(self, teacher_id, language_id, location):
+        self.teacher_id = teacher_id
+        self.language_id = language_id
         self.location = location
 
     def __repr__(self):

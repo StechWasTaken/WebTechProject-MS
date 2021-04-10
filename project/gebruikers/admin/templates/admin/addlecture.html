@@ -1,0 +1,44 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+<div class="model_list_table">
+
+    <h1> Add Lecture </h1>
+
+    <div class="col-lg-12" my-auto>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group row">
+                {{ form.course_name.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-4">
+                    {{ form.course_name(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.start_time.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-4">
+                    {{ form.start_time(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.end_time.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-4">
+                    {{ form.end_time(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.lecture_name.label(class="col-sm-2 col-form-label") }} 
+                <div class="col-sm-4">
+                    {{ form.lecture_name(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    {{ form.submit(class="btn btn-dark") }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
