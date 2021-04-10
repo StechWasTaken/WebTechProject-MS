@@ -14,19 +14,17 @@
                 <tr>
                     <th scope="col">Taal</th>
                     <th scope="col">Docent</th>
-                    <th scope="col">Datum</th>
                     <th scope="col">Locatie</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-                {% for lecture in lectures %}
+                {% for course in courses %}
                 <tr>
-                    <td>{{ lecture.language }}</td>
-                    <td>{{ lecture.username }}</td>
-                    <td>{{ lecture.start_time }}</td>
-                    <td>{{ lecture.location }}</td>
-                    <td><a href="{{ url_for('standaard.cursus', language=lecture.language, lecture_id=lecture.id)}}" class="btn btn-dark">Bekijken</a></td> <!---moet nog een dynamische link aanmaken--->
+                    <td>{{ course.language }}</td>
+                    <td>{{ course.username }}</td>
+                    <td>{{ course.location }}</td>
+                    <td><a href="{{ url_for('standaard.cursus', language=course.language, course_id=course.id)}}" class="btn btn-dark">Bekijken</a></td> <!---moet nog een dynamische link aanmaken--->
                 </tr>
                 {% endfor %}
             </tbody>
