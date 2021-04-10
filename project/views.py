@@ -33,16 +33,18 @@ def cursus(language, lecture_id):
     
     return render_template('cursus.html', lecture=lecture)
 
-# hij gaat na het inloggen terug naar het inlog scherm, moet veranderd worden !!BELANGRIJK!!
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     # code voor login
     form = LoginForm()
 
-    if request.method != 'POST' and request.method != 'GET':
-        resp = make_response(render_template('login.html', form=form))
-        resp.set_cookie('referrer', request.headers.get("Referer"))
-        return resp
+    if request.method != 'POST':    # toch maar de try en except gebruikt ipv !='GET', want anders gaat hij nooit verder
+        try:
+            resp = make_response(render_template('login.html', form=form))
+            resp.set_cookie('referrer', request.headers.get("Referer"))
+            return resp
+        except:
+            print("cookie exception")
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

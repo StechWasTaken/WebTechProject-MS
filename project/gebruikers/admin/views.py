@@ -40,12 +40,6 @@ class AdminModelView(ModelView):
         return current_app.login_manager.unauthorized()
 
 
-class AdminUserView(AdminModelView):
-    """ maakt de view om users te kunnen toevoegen 
-    Gebruik samen met User tabel
-    """
-
-
 
 class AdminAddRoleView(AdminModelView):
     """ hoe doe je dit xD AdminModelView? Iets anders?
@@ -60,7 +54,7 @@ class AdminAddRoleView(AdminModelView):
 admin = Admin(app, index_view=AdminHomeView())
 
 # add views
-admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(User, db.session)) # werkt voor nu
 admin.add_view(AdminModelView(Role, db.session))
 admin.add_view(AdminModelView(UserRoles, db.session))
 admin.add_view(AdminModelView(Language, db.session))
