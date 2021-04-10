@@ -1,4 +1,4 @@
-from flask import current_app, flash
+from flask import current_app, flash, redirect, render_template
 from flask.blueprints import Blueprint
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
@@ -42,7 +42,6 @@ class AdminModelView(ModelView):
         return current_app.login_manager.unauthorized()
 
 
-
 class AdminUserView(AdminModelView):
     """ ook role_id is te zien zo
     Kunt hier aanpassen welke kolommen te zien zijn
@@ -51,6 +50,10 @@ class AdminUserView(AdminModelView):
     # column_hide_backrefs = False
     column_list = ['email', 'username', 'role_id']
     form_columns = ('email', 'username', 'password', 'role_id')
+    form_choices = {'role_id': [
+        ('1', 'student'), ('2', 'docent'), ('3', 'admin')
+    ]}
+    column_sortable_list = ('email', 'username', 'role_id')
 
 
 class AdminRoleView(AdminModelView):
@@ -58,7 +61,6 @@ class AdminRoleView(AdminModelView):
     Kunt hier aanpassen welke kolommen te zien zijn
     """
     column_display_pk = True
-    # column_hide_backrefs = False
     column_list = ['id', 'name']
     can_edit = False
     can_create = False
@@ -66,27 +68,15 @@ class AdminRoleView(AdminModelView):
 
 class AdminLanguageView(AdminModelView):
     column_display_pk = True
-    # column_hide_backrefs = False
     column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
     column_display_pk = True 
     # column_hide_backrefs = False
-    column_list = ['teacher_id', 'language_id', 'location']
+    column_list = ['id', 'teacher_id', 'language_id', 'location']
     can_create = False
-
+    column_sortable_list = ('id', 'teacher_id', 'language_id', 'location')
     # form_columns = ('teacher_id', 'language_id', 'location')
-
-    # test vanaf hier, form_columns hierboven moet anders uit comment
-
-    # def __init__(self, session, **kwargs):
-    #     super(AdminCourseView, self).__init__(Course, session, **kwargs)
-
-    # def create_form(self):
-    #     form = AddCourseForm()
-    #     return form
-
-    
 
 class AdminAddCourseView(BaseView):
     """ eigen form die een course toevoegd dmv naam, taal en locatie
@@ -124,10 +114,11 @@ class AdminLectureView(AdminModelView):
     # column_hide_backrefs = False
     column_list = ['course_id', 'start_time', 'end_time', 'lecture_name']
     form_columns = ('course_id', 'start_time', 'end_time', 'lecture_name')
+    column_sortable_list = ('course_id', 'start_time', 'end_time', 'lecture_name')
 
 
 class AdminAddLectureView(BaseView):
-    """ eigen form ipv gewone lectureview, moet eventueel nog gemaakt worden
+    """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
     """
     @expose('/', methods=['GET', 'POST'])
     def index(self):
@@ -136,6 +127,10 @@ class AdminAddLectureView(BaseView):
         
         return self.render("addlecture.html", form=form)
 
+class AdminExit(BaseView):
+    @expose('/')
+    def index(self):
+        return redirect(url_for('index'))
 
 
 admin = Admin(app, index_view=AdminHomeView())
@@ -148,4 +143,4 @@ admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 admin.add_view(AdminCourseView(Course, db.session))
 admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture"))
+admin.add_view(AdminExit(name='Exit'))
