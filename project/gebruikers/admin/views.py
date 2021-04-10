@@ -44,13 +44,25 @@ class AdminModelView(ModelView):
 
 
 class AdminUserView(AdminModelView):
-    """ hier moet een overzicht van users en roles komen (liefst in een tabel)
+    """ ook role_id is te zien zo
+    Kunt hier aanpassen welke kolommen te zien zijn
     """
-    column_display_pk = True # optional, but I like to see the IDs in the list
-    column_hide_backrefs = False
-    column_list = ('email', 'username', 'role_id')
+    column_display_pk = True 
+    # column_hide_backrefs = False
+    column_list = ['email', 'username', 'role_id']
+    form_columns = ('email', 'username', 'password', 'role_id')
 
 
+class AdminRoleView(AdminModelView):
+    """ Ook id is te zien zo
+    Kunt hier aanpassen welke kolommen te zien zijn
+    """
+    column_display_pk = True
+    # column_hide_backrefs = False
+    column_list = ['id', 'name']
+    can_edit = False
+    can_create = False
+    can_delete = False
 
 class AdminAddRoleView(BaseView):
     """ Een pagina met een form om AddRole te gebruiken, admin kan hier een role aan een user toevoegen
@@ -83,8 +95,7 @@ admin = Admin(app, index_view=AdminHomeView())
 
 # add views
 admin.add_view(AdminUserView(User, db.session)) # werkt voor nu
-admin.add_view(AdminModelView(Role, db.session)) # werkt voor nu
-admin.add_view(AdminAddRoleView(name="Add Role", url="/addrole")) # werkt voor nu
+admin.add_view(AdminRoleView(Role, db.session)) # werkt voor nu
 
 admin.add_view(AdminModelView(Language, db.session))
 admin.add_view(AdminModelView(Lecture, db.session))

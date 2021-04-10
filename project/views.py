@@ -77,15 +77,16 @@ def register():
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    role_id=1)
 
         db.session.add(user)
         db.session.commit()
         flash('Dank voor de registratie. Er kan nu ingelogd worden! ')
 
-        # student role toevoegen
-        user = User.query.filter_by(email=form.email.data).first()
-        addRole(user.id, 'student')
+        # # student role toevoegen
+        # user = User.query.filter_by(email=form.email.data).first()
+        # addRole(user.id, 'student')
 
         return redirect(url_for('standaard.login'))
 

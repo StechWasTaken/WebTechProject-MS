@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin
 
+# belangrijk om bij een nieuwe database de student role toe te voegen
+
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -22,12 +24,13 @@ class User(db.Model, UserMixin):
     email       = db.Column(db.String(64), unique=True, index=True, nullable=False)
     username    = db.Column(db.String(64), unique=True, index=True, nullable=False)
     password    = db.Column(db.String(128), nullable=False)
-    role_id     = db.Column(db.Integer, db.ForeignKey("roles.id"))
+    role_id     = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, role_id):
         self.username   = username
         self.email      = email
         self.password   = password
+        self.role_id    = role_id
 
     def __repr__(self):
         return f"<User email={self.email} username={self.username}>"
@@ -42,7 +45,7 @@ def hash_user_password(target, value, oldvalue, initiator):
     if value != oldvalue:
         return generate_password_hash(value)
     return value
-        
+
 
 class Role(db.Model):
 
