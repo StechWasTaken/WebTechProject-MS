@@ -43,6 +43,15 @@ class AdminModelView(ModelView):
 
 
 
+class AdminUserView(AdminModelView):
+    """ hier moet een overzicht van users en roles komen (liefst in een tabel)
+    """
+    column_display_pk = True # optional, but I like to see the IDs in the list
+    column_hide_backrefs = False
+    column_list = ('email', 'username', 'role_id')
+
+
+
 class AdminAddRoleView(BaseView):
     """ Een pagina met een form om AddRole te gebruiken, admin kan hier een role aan een user toevoegen
     """
@@ -68,29 +77,18 @@ class AdminAddRoleView(BaseView):
 
 
 
-    pass
-
-class AdminUserRolesView(AdminModelView):
-    """ hier moet een overzicht van users en roles komen (liefst in een tabel)
-    """
-    column_display_pk = True # optional, but I like to see the IDs in the list
-    column_hide_backrefs = False
-    column_list = ('user_id', 'role_id')
-
-
 
 
 admin = Admin(app, index_view=AdminHomeView())
 
 # add views
-admin.add_view(AdminModelView(User, db.session)) # werkt voor nu
+admin.add_view(AdminUserView(User, db.session)) # werkt voor nu
 admin.add_view(AdminModelView(Role, db.session)) # werkt voor nu
 admin.add_view(AdminAddRoleView(name="Add Role", url="/addrole")) # werkt voor nu
 
-admin.add_view(AdminUserRolesView(UserRoles, db.session)) 
-
 admin.add_view(AdminModelView(Language, db.session))
 admin.add_view(AdminModelView(Lecture, db.session))
+
 
 # misschien dat we dit ook zo kunnen maken dat het voor de admin makkelijker is om dingen toe te voegen
 # ga ik nog naar kijken

@@ -30,43 +30,13 @@ def addRole(uid, rolename):
     """ adds a role to user, in UserRoles table"""
     user = User.query.filter_by(id=uid).first()
     role = Role.query.filter_by(name = rolename).first()
-
-    # check if user exists in UserRoles, zo niet voeg toe
-    if UserRoles.query.filter_by(user_id = user.id) == "":
-        userrole = UserRoles(user_id = user.id, role_id = role.id)
-        db.session.add(userrole)
-    else: # verander de role vd user
-        user = UserRoles.query.filter_by(user_id = user.id).first()
-        user.role_id = role.id
-        db.session.add(user)
+    user.role_id = role.id
+    db.session.add(user)
     db.session.commit()
-
-
-    # code om meer roles per user te hebben. Dit werkt op dit moment niet.
-    # # zo wel, append de role met de bestaande roles en voeg toe
-    # # Dit werkt nog niet, daar moet de database anders voor
-    # # Voor als er tijd over is
-
-    #  else:
-    #      existing_user = UserRoles.query.filter_by(user_id = user.id).first()
-    #      existing_roles = existing_user.role_id
-    #      if type(existing_roles) == int:
-    #          existing_roles = [existing_roles]
-    #      existing_roles.append(role.id)
-    #      existing_user.role_id = existing_roles
-    #      db.session.add(existing_user)
-
-    # db.session.commit()
 
 
 def getRole(uid):
     """ gets role name """
-    user = UserRoles.query.filter_by(user_id=uid).first()
+    user = User.query.filter_by(id=uid).first()
     role = Role.query.filter_by(id = user.role_id).first()
     return role.name
-
-# in het geval dat een user wordt aangemaakt wordt de student role automatisch toegevoegd
-@event.listens_for(User.id, 'set', retval=True)
-def addStudentRole():
-    addRole(User.id, 'student')
-    return
