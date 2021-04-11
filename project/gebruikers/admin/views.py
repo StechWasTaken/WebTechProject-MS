@@ -78,7 +78,8 @@ class AdminCourseView(AdminModelView):
     form_columns = ('teacher_id', 'language_id', 'location', 'cost', 'description')
 
 class AdminAddCourseView(BaseView):
-    """ eigen form die een course toevoegd dmv naam, taal en locatie
+    """ eigen view die een course kan toevoegen dmv naam, taal, locatie, kosten en omschrijving
+    Ook haalt hij de users en talen uit de database om in de form te gebruiken
     """
     @expose('/', methods=['GET', 'POST'])
     def index(self):

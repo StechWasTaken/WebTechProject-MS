@@ -91,7 +91,7 @@ class Course(db.Model):
         self.description = description
 
     def __repr__(self):
-        return f"<Course start_time={self.start_time} location={self.location}>"
+        return f"<Course={self.language_id} location={self.location}>"
 
 class Attendee(db.Model):
     

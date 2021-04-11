@@ -19,7 +19,12 @@ def index():
         role = getRole(current_user.id)
         name = current_user.username
 
-    return render_template('home.html', role = role, name = name)
+    cursussen = Course.query\
+                .filter_by()\
+                .join(Language, Course.language_id == Language.id)\
+                .add_columns(Language.language, Course.description).all()
+
+    return render_template('home.html', role = role, name = name, cursussen=cursussen)
 
 if __name__ == "__main__":
     app.run(debug=True)
