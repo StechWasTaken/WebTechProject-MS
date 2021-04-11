@@ -22,6 +22,9 @@ def cursussen():
 
 @standaard_blueprint.route('/cursus/<language>/<course_id>')
 def cursus(language, course_id):
+    """ laad de cursuspagina van de taal samen met de course id
+    haalt deze uit de database
+    """
     if current_user.is_anonymous:
         flash(Markup('U moet eerst inloggen of registreren voordat u zich kan inschrijven voor een cursus. <br> Registreren kan <b><a href="' + url_for('standaard.register') + '">hier</a></b>! <br><br> <b><a href="' + url_for('standaard.login') + '">Inloggen</a></b>'))
 
@@ -31,7 +34,14 @@ def cursus(language, course_id):
                 .join(User, Course.teacher_id == User.id)\
                 .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location, Course.cost, Course.description).first_or_404()
     
-    return render_template('cursus.html', course=course)
+    # kijkt naar discount
+    discount = False
+    korting = Korting()
+    if current_user.is_authenticated:
+        if Attendee.query.filter_by(user_id = current_user.id).first() != None:
+            discount = True
+
+    return render_template('cursus.html', course=course, discount = discount, korting=korting)
 
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():

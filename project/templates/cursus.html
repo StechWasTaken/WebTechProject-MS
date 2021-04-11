@@ -5,7 +5,13 @@
     <h1><i class="fas fa-book"></i> Cursus {{ course.language }}</h1>
 </div>
 <div class="jumbotron">
-    <p> <b>Prijs:</b> {{ course.cost}} </p>
+    <p> {% if discount == True %}
+        <b>Prijs:</b> <s>{{ course.cost}}</s> {{ course.cost*korting }}
+        {% else %}
+        <b>Prijs:</b> {{ course.cost}}    
+        {% endif %}
+
+    </p>
     <p> <b>Docent:</b> {{ course.username}} </p>
     <p> <b>Locatie:</b> {{ course.location}} </p>
     <p> <b>Omschrijving:</b> {{ course.description }} </p>
