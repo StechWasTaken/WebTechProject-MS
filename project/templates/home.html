@@ -6,34 +6,34 @@
 
 {% block content %}
 
+
 <div class ="container">
   <div class="row">
     <div class="col-8">
       <div class="jumbotron">
         <h1 class = "blueheader">Welkom bij IT Academy Noord-Nederland!</h1>
-        <p>Om te beginnen, selecteer een item uit de navigatiebalk.</p>
-      </div>
-      <div class="jumbotron">
-        <h1 class = "blueheader">Cursussen</h1>
-        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div id="CursusCarousel" class="carousel slide" data-ride="carousel">
 
           <div class="carousel-inner">
             <div class="carousel-item active">
+              <a href="{{url_for('standaard.cursussen')}}">
               <img class="d-block w-100" src="/static/code.png" alt="cursussen"> <!--source afbeeling nog veranderen-->
               <div class="carousel-caption d-none d-md-block">
                 <h3 class=whitetext">Onze Cursussen</h5>
                 <p>all onze cursussen</p>
               </div>
+              </a>
             </div>
             {% for cursus in cursussen %}
             <div class="carousel-item">
+              <a href="{{ url_for('standaard.cursus', language=cursus.language, course_id=cursus.id)}}">
               <img class="d-block w-100" src="/static/code.png" alt={{cursus.language}}> <!-- source afbeeling nog veranderen -->
               <div class="carousel-caption d-none d-md-block">
-                <a href="{{ url_for('standaard.cursus', language=cursus.language, course_id=cursus.id)}}">
                   <h3 class="whitetext">{{cursus.language}}</h5> 
-                </a>
+
                 <p>{{cursus.description}}</p>
               </div>
+              </a>
             </div>
             {% endfor %}
           </div>
