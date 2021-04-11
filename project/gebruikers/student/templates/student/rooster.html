@@ -2,22 +2,40 @@
 
 {% block content %}
 
-<div class="jumbotron m-0">
+<div class="jumbotron m-0 p-4">
+    <div class="row p-3">
+        <div class="col d-flex justify-content-end p-1">
+            <a class="btn btn-outline-success" href="{{ url_for('student.rooster', year=previous[0], week=previous[1]) }}">Vorige week</a>
+        </div>
+        <div class="col d-flex justify-content-start p-1">
+            <a class="btn btn-outline-success" href="{{ url_for('student.rooster', year=next[0], week=next[1]) }}">Volgende week</a>
+        </div>
+    </div>
     <table class="table">
-        <thead>
+        <thead class="thead-dark">
             <tr>
-                <td></td>
+                <th></th>
                 {% for date in dates %}
-                    <td>{{ date.strftime('%A, %d %B') }}</td>
+                    <th>{{ date.strftime('%A, %d %B') }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for hour in range(9, 22) %}
                 <tr>
-                    <td>{{ hour }}:00</td>
-                    {% for day in dates %}
-                        <td></td>
+                    <td><div class="table-data">{{ hour }}:00</div></td>
+                    {% for date in dates %}
+                        <td>
+                            <div class="d-flex justify-content-start">
+                            {% for lecture in lectures %}
+                                
+                                {% if dt.combine(date, t) + td(hours=hour+1) >= lecture.start_time and dt.combine(date, t) + td(hours=hour) < lecture.end_time %}       
+                                    <div class="table-data lecture mr-1">{{ lecture.language }}</div>
+                                {% endif %}
+
+                            {% endfor %}
+                            </div>
+                        </td>
                     {% endfor %}
                 </tr>
             {% endfor %}

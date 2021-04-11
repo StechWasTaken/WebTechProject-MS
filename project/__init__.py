@@ -1,4 +1,6 @@
 import os
+from datetime import datetime, timedelta, time
+from calendar import *
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,6 +10,10 @@ from flask_login import current_user
 
 # de app moet hier geïnitialiseerd worden, niet in app.py, hier pakt hij __name__ goed
 app = Flask(__name__)
+
+@app.context_processor
+def inject_stage_and_region():
+    return dict(date_now=datetime.now().date(), td=timedelta, dt=datetime, t=time())
 
 app.config['SECRET_KEY'] = 'mijngeheimesleutel'
 
@@ -20,7 +26,6 @@ db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
 login_manager.login_view = 'standaard.login'
-
 
 with app.app_context():
     db.create_all()

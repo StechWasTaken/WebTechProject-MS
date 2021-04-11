@@ -30,7 +30,17 @@ html {
     border-radius: 25px;
 }
 
+.table-data {
+    padding: 0.75rem
+}
 
+.lecture {
+    background-color: rgb(197, 197, 197);
+}
+
+td {
+    padding: 0 !important;
+}
 
 /* flash bericht */
 .alert { 
