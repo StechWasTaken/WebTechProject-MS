@@ -14,6 +14,8 @@ class AddCourseForm(FlaskForm):
     location = StringField('Location', validators=[DataRequired()])
     submit = SubmitField('Add Course')
 
+
+# Dit is nu overbodig - verwijderen?
 class AddLectureForm(FlaskForm):
     """ course_id', start_time, end_time, lecture_name)
     """
