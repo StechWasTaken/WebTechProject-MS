@@ -16,7 +16,6 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(user_id)
 
-
 class User(db.Model, UserMixin):
 
     __tablename__ = 'users'
@@ -92,7 +91,7 @@ class Course(db.Model):
         self.description = description
 
     def __repr__(self):
-        return f"<Course start_time={self.start_time} location={self.location}>"
+        return f"<Course={self.language_id} location={self.location}>"
 
 class Attendee(db.Model):
     
@@ -129,8 +128,3 @@ class Lecture(db.Model):
     start_time          = db.Column(db.DateTime) 
     end_time            = db.Column(db.DateTime)
     lecture_name        = db.Column(db.Text)
-
-
-
-
-

@@ -1,3 +1,6 @@
+import locale
+from datetime import *
+from calendar import *
 from flask import current_app, flash, redirect, render_template
 from flask.blueprints import Blueprint
 from flask_admin import Admin, AdminIndexView, expose, BaseView
@@ -13,6 +16,54 @@ from project.gebruikers.admin.forms import *
 
 admin_blueprint = Blueprint('administrator', __name__, template_folder='templates/admin')
 
+@admin_blueprint.route('/rooster/<year>/<week>')
+@role_required('admin')
+def admin_rooster(year, week):
+    """ Rooster met alle lessen voor het meegegeven jaar en de meegegeven week.
+    """
+    locale.setlocale(locale.LC_TIME, 'nl_NL.utf8')
+    calendar = Calendar()
+    current_year = int(year)
+    current_week = int(week)
+    current_day = datetime.now().date()
+
+    dates = []
+    for month in range(1, 13):
+        month_dates = calendar.monthdatescalendar(current_year, month)
+        for week_dates in month_dates:
+            for date in week_dates:
+                if date.isocalendar()[1] == current_week:
+                    if date not in dates:
+                        dates.append(date)
+
+    start_date = dates[0]
+    end_date = dates[len(dates)-1] + timedelta(days=1)
+
+    lectures =  Lecture.query\
+                .join(Course, Course.id == Lecture.course_id)\
+                .join(Language, Language.id == Course.language_id)\
+                .join(User, User.id == Course.teacher_id)\
+                .add_columns(Lecture.id, Language.language, User.username, Lecture.start_time, Lecture.end_time, Lecture.lecture_name)\
+                .filter(Lecture.start_time >= start_date, Lecture.start_time < end_date)\
+                .all()
+
+    if current_week-1 < 1:
+        if datetime(current_year-1, 12, 28).isocalendar()[1] == 53:
+            previous = (current_year-1, 53)
+        else:
+            previous = (current_year-1, 52)
+    else:
+        previous = (current_year, current_week-1)
+    
+    if current_week+1 > 52:
+        if datetime(current_year, 12, 28).isocalendar()[1] == 53 and current_week != 53:
+            next = (current_year, 53)
+        else:
+            next = (current_year+1, 1)
+    else:
+        next = (current_year, current_week+1)
+
+    return render_template('admin_rooster.html', dates=dates, current_day=current_day, previous=previous, next=next, lectures=lectures)
 
 class AdminHomeView(AdminIndexView):
     """ Dit is de view voor de admin homepage /admin, index.html """
@@ -23,11 +74,15 @@ class AdminHomeView(AdminIndexView):
         return self.render('index.html', username = name)
 
     def is_accessible(self):
+        """geeft aan, zoals de naam zegt, of deze view accessible is
+        """
         if current_user.is_authenticated:
             if getRole(current_user.id) == "admin":
                 return True
 
     def inaccessible_callback(self, name, **kwargs):
+        """ als hij inaccesible is, zegt hij unauthorized en gaat hij naar login
+        """
         return current_app.login_manager.unauthorized()
 
 
@@ -59,7 +114,7 @@ class AdminUserView(AdminModelView):
 
 
 class AdminRoleView(AdminModelView):
-    """ Ook id is te zien zo
+    """ Ook id is te zien met column_list id, name
     Kunt hier aanpassen welke kolommen te zien zijn
     Deze mag je niet aanpassen, want rollen zijn noodzakelijk voor de site om te werken
     """
@@ -74,6 +129,9 @@ class AdminLanguageView(AdminModelView):
     column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
+    """aanpassingen welke coumns sortable zijn en welke er bij aangepast kunnen worden
+    kan niet aanmaken, dat gebeurt via Add Course
+    """
     column_display_pk = True 
     column_list = ['id', 'teacher_id', 'language_id', 'location', 'cost', 'description']
     can_create = False
@@ -81,11 +139,27 @@ class AdminCourseView(AdminModelView):
     form_columns = ('teacher_id', 'language_id', 'location', 'cost', 'description')
 
 class AdminAddCourseView(BaseView):
-    """ eigen form die een course toevoegd dmv naam, taal en locatie
+    """ eigen view die een course kan toevoegen dmv naam, taal, locatie, kosten en omschrijving
+    Ook haalt hij de users en talen uit de database om in de form te gebruiken
     """
     @expose('/', methods=['GET', 'POST'])
     def index(self):
+        
+        usernames = []
+        languages = []
+
+        users = User.query.filter_by(role_id = 2).all()
+        for user in users:
+            usernames += [user.username]
+
+        lans = Language.query.filter_by().all()
+        print(languages)
+        for lan in lans:
+            languages += [lan.language]
+
         form = AddCourseForm()
+        form.username.choices = usernames
+        form.language.choices = languages
 
         if form.validate_on_submit():
             username = form.username.data
@@ -134,35 +208,9 @@ class AdminLectureView(AdminModelView):
         return super(AdminLectureView, self).validate_form(form)
 
 
-# Ik denk dat dit nu overbodig is
-class AdminAddLectureView(BaseView):
-    """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
-    """
-    @expose('/', methods=['GET', 'POST'])
-    def index(self):
-        form = AddLectureForm()
-        if form.validate_on_submit():
-            course_id = form.course_id.data
-            start_time = form.start_time.data
-            end_time = form. end_time.data
-            lecture_name = form.lecture_name.data
-
-            if end_time <= start_time:
-                flash("Geen geldige eind- en starttijd")
-            else:
-                lecture = Lecture(course_id = course_id,
-                                  start_time = start_time,
-                                  end_time = end_time,
-                                  lecture_name = lecture_name)
-                db.session.add(lecture)
-                db.session.commit()
-                flash("lecture toegevoegd")
-                return self.render("addlecture.html", form=form)                                 
-
-        
-        return self.render("addlecture.html", form=form)
-
 class AdminExit(BaseView):
+    """ redirect naar de homepage
+    """
     @expose('/')
     def index(self):
         return redirect(url_for('index'))
@@ -178,5 +226,4 @@ admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 admin.add_view(AdminCourseView(Course, db.session))
 admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture")) # Overbodig, verwijderen?
 admin.add_view(AdminExit(name='Exit'))

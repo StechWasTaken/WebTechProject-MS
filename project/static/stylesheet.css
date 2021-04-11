@@ -38,7 +38,7 @@ html {
     background-color: rgb(197, 197, 197);
 }
 
-td {
+.rooster td {
     padding: 0 !important;
 }
 
@@ -47,3 +47,6 @@ td {
     margin: 1rem 0.1rem !important; 
 }
 
+.carousel-item.active {
+    display:block;
+}

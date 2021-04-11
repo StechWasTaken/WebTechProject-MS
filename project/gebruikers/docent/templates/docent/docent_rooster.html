@@ -8,10 +8,10 @@
     </div>
     <div class="row p-3">
         <div class="col d-flex justify-content-end p-1">
-            <a class="btn btn-outline-success" href="{{ url_for('student.rooster', year=previous[0], week=previous[1]) }}">Vorige week</a>
+            <a class="btn btn-outline-success" href="{{ url_for('docent.docent_rooster', year=previous[0], week=previous[1]) }}">Vorige week</a>
         </div>
         <div class="col d-flex justify-content-start p-1">
-            <a class="btn btn-outline-success" href="{{ url_for('student.rooster', year=next[0], week=next[1]) }}">Volgende week</a>
+            <a class="btn btn-outline-success" href="{{ url_for('docent.docent_rooster', year=next[0], week=next[1]) }}">Volgende week</a>
         </div>
     </div>
     <table class="table rooster">

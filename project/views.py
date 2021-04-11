@@ -12,7 +12,8 @@ standaard_blueprint = Blueprint('standaard',
 
 @standaard_blueprint.route('/cursussen')
 def cursussen():
-    # code voor cursus
+    """ Geeft alle cursussen weer.
+    """
     courses =  Course.query\
                 .join(Language, Course.language_id == Language.id)\
                 .join(User, Course.teacher_id == User.id)\
@@ -45,6 +46,9 @@ def cursus(language, course_id):
 
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
+    """ Laad de login pagina en logt gebruiker X in wanneer het formulier wordt ingediend.
+        Kan ook terugverwijzen naar een pagina voor het inloggen door middel van een cookie.
+    """
     # code voor login
     form = LoginForm()
 
@@ -75,12 +79,16 @@ def login():
 @standaard_blueprint.route('/logout')
 @login_required
 def logout():
+    """ logt gebruiker X uit.
+    """
     logout_user()
     flash('Je bent nu uitgelogd!')
     return redirect(url_for('index'))
 
 @standaard_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+    """ Laad de register pagina en registreert gebruiker X wanneer het formulier wordt ingediend.
+    """
     # code voor register
     form = RegisterForm()
 
