@@ -22,11 +22,15 @@ class AdminHomeView(AdminIndexView):
         return self.render('index.html', username = name)
 
     def is_accessible(self):
+        """geeft aan, zoals de naam zegt, of deze view accessible is
+        """
         if current_user.is_authenticated:
             if getRole(current_user.id) == "admin":
                 return True
 
     def inaccessible_callback(self, name, **kwargs):
+        """ als hij inaccesible is, zegt hij unauthorized en gaat hij naar login
+        """
         return current_app.login_manager.unauthorized()
 
 
@@ -57,7 +61,7 @@ class AdminUserView(AdminModelView):
 
 
 class AdminRoleView(AdminModelView):
-    """ Ook id is te zien zo
+    """ Ook id is te zien met column_list id, name
     Kunt hier aanpassen welke kolommen te zien zijn
     """
     column_display_pk = True
@@ -71,6 +75,9 @@ class AdminLanguageView(AdminModelView):
     column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
+    """aanpassingen welke coumns sortable zijn en welke er bij aangepast kunnen worden
+    kan niet aanmaken, dat gebeurt via Add Course
+    """
     column_display_pk = True 
     column_list = ['id', 'teacher_id', 'language_id', 'location', 'cost', 'description']
     can_create = False
@@ -78,11 +85,27 @@ class AdminCourseView(AdminModelView):
     form_columns = ('teacher_id', 'language_id', 'location', 'cost', 'description')
 
 class AdminAddCourseView(BaseView):
-    """ eigen form die een course toevoegd dmv naam, taal en locatie
+    """ eigen view die een course kan toevoegen dmv naam, taal, locatie, kosten en omschrijving
+    Ook haalt hij de users en talen uit de database om in de form te gebruiken
     """
     @expose('/', methods=['GET', 'POST'])
     def index(self):
+        
+        usernames = []
+        languages = []
+
+        users = User.query.filter_by(role_id = 2).all()
+        for user in users:
+            usernames += [user.username]
+
+        lans = Language.query.filter_by().all()
+        print(languages)
+        for lan in lans:
+            languages += [lan.language]
+
         form = AddCourseForm()
+        form.username.choices = usernames
+        form.language.choices = languages
 
         if form.validate_on_submit():
             username = form.username.data
@@ -131,35 +154,9 @@ class AdminLectureView(AdminModelView):
         return super(AdminLectureView, self).validate_form(form)
 
 
-# Ik denk dat dit nu overbodig is
-class AdminAddLectureView(BaseView):
-    """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
-    """
-    @expose('/', methods=['GET', 'POST'])
-    def index(self):
-        form = AddLectureForm()
-        if form.validate_on_submit():
-            course_id = form.course_id.data
-            start_time = form.start_time.data
-            end_time = form. end_time.data
-            lecture_name = form.lecture_name.data
-
-            if end_time <= start_time:
-                flash("Geen geldige eind- en starttijd")
-            else:
-                lecture = Lecture(course_id = course_id,
-                                  start_time = start_time,
-                                  end_time = end_time,
-                                  lecture_name = lecture_name)
-                db.session.add(lecture)
-                db.session.commit()
-                flash("lecture toegevoegd")
-                return self.render("addlecture.html", form=form)                                 
-
-        
-        return self.render("addlecture.html", form=form)
-
 class AdminExit(BaseView):
+    """ redirect naar de homepage
+    """
     @expose('/')
     def index(self):
         return redirect(url_for('index'))
@@ -175,5 +172,4 @@ admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 admin.add_view(AdminCourseView(Course, db.session))
 admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture")) # Overbodig, verwijderen?
 admin.add_view(AdminExit(name='Exit'))
