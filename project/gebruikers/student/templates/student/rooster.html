@@ -12,32 +12,29 @@
         </div>
     </div>
     <table class="table">
-        <thead>
+        <thead class="thead-dark">
             <tr>
-                <td></td>
+                <th></th>
                 {% for date in dates %}
-                    <td>{{ date.strftime('%A, %d %B') }}</td>
+                    <th>{{ date.strftime('%A, %d %B') }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for hour in range(9, 22) %}
                 <tr>
-                    <td>{{ hour }}:00</td>
+                    <td><div class="table-data">{{ hour }}:00</div></td>
                     {% for date in dates %}
-                            {% if lectures == [] %}
-                                <td>
-                            {% endif %}
+                        <td>
+                            <div class="d-flex justify-content-start">
                             {% for lecture in lectures %}
                                 
                                 {% if dt.combine(date, t) + td(hours=hour+1) >= lecture.start_time and dt.combine(date, t) + td(hours=hour) < lecture.end_time %}       
-                                <td style="background-color: rgb(192, 192, 192);">
-                                    {{ lecture.language }}
-                                {% else %}
-                                <td>
+                                    <div class="table-data lecture mr-1">{{ lecture.language }}</div>
                                 {% endif %}
 
                             {% endfor %}
+                            </div>
                         </td>
                     {% endfor %}
                 </tr>
