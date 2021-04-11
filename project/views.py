@@ -29,7 +29,7 @@ def cursus(language, course_id):
                 .filter_by(id=course_id)\
                 .join(Language, Course.language_id == Language.id)\
                 .join(User, Course.teacher_id == User.id)\
-                .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location).first_or_404()
+                .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location, Course.cost, Course.description).first_or_404()
     
     return render_template('cursus.html', course=course)
 

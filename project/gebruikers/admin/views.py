@@ -72,11 +72,10 @@ class AdminLanguageView(AdminModelView):
 
 class AdminCourseView(AdminModelView):
     column_display_pk = True 
-    # column_hide_backrefs = False
-    column_list = ['id', 'teacher_id', 'language_id', 'location']
+    column_list = ['id', 'teacher_id', 'language_id', 'location', 'cost', 'description']
     can_create = False
     column_sortable_list = ('id', 'teacher_id', 'language_id', 'location')
-    # form_columns = ('teacher_id', 'language_id', 'location')
+    form_columns = ('teacher_id', 'language_id', 'location', 'cost', 'description')
 
 class AdminAddCourseView(BaseView):
     """ eigen form die een course toevoegd dmv naam, taal en locatie
@@ -89,6 +88,8 @@ class AdminAddCourseView(BaseView):
             username = form.username.data
             language = form.language.data
             location = form.location.data
+            cost     = form.cost.data
+            description = form.description.data
 
             # check if some is a teacher
             user = User.query.filter_by(username = username).first()
@@ -100,7 +101,9 @@ class AdminAddCourseView(BaseView):
             else:
                 course = Course(teacher_id = user.id, 
                                 language_id = language.id,
-                                location = location)
+                                location = location,
+                                cost = cost,
+                                description = description)
                 db.session.add(course)
                 db.session.commit()
                 flash("course toegevoegd")
