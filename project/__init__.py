@@ -12,7 +12,9 @@ from flask_login import current_user
 app = Flask(__name__)
 
 @app.context_processor
-def inject_stage_and_region():
+def inject_time_related_functions():
+    """ Geeft global variabelen mee aan alle templates, zodat deze gebruikt kunnen worden.
+    """
     return dict(date_now=datetime.now().date(), td=timedelta, dt=datetime, t=time())
 
 app.config['SECRET_KEY'] = 'mijngeheimesleutel'
@@ -43,8 +45,10 @@ with app.app_context():
 # Blueprints
 from project.gebruikers.student.views import student_blueprint
 from project.gebruikers.admin.views import admin_blueprint
+from project.gebruikers.docent.views import docent_blueprint
 from project.views import standaard_blueprint
 
 app.register_blueprint(student_blueprint, url_prefix="/student")
 app.register_blueprint(standaard_blueprint)
 app.register_blueprint(admin_blueprint, url_prefix="/admin")
+app.register_blueprint(docent_blueprint, url_prefix="/docent")

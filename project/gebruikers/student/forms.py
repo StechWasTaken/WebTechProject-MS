@@ -5,6 +5,8 @@ from wtforms import ValidationError
 from project.models import User
 
 class AlterUsernameForm(FlaskForm):
+    """ Een formulier voor het wijzigen van een gebruikersnaam.
+    """
     username = StringField('Gebruikersnaam', validators=[DataRequired()])
     submit = SubmitField('Wijzigen')
 
@@ -13,6 +15,8 @@ class AlterUsernameForm(FlaskForm):
             raise ValidationError('Deze gebruikersnaam is al vergeven, probeer een ander naam!')
 
 class AlterEmailForm(FlaskForm):
+    """ Een formulier voor het wijzigen van een email.
+    """
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     submit = SubmitField('Wijzigen')
 
@@ -21,6 +25,8 @@ class AlterEmailForm(FlaskForm):
             raise ValidationError('Dit e-mailadres staat al geregistreerd!')
 
 class AlterPasswordForm(FlaskForm):
+    """ Een formulier voor het wijzigen van een wachtwoord.
+    """
     old_password = PasswordField('Oude wachtwoord', validators=[DataRequired()])
     new_password = PasswordField('Nieuwe wachtwoord', validators=[DataRequired(), EqualTo('pass_confirm',    message='Wachtwoord matched niet!')])
     new_pass_confirm = PasswordField('Bevestig nieuwe wachtwoord', validators=[DataRequired()])

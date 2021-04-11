@@ -17,6 +17,8 @@ student_blueprint = Blueprint('student',
 @student_blueprint.route('/rooster/<year>/<week>')
 @role_required('student')
 def rooster(year, week):
+    """ Rooster met alle lessen die student X volgt voor het meegegeven jaar en de meegegeven week.
+    """
     locale.setlocale(locale.LC_TIME, 'nl_NL.utf8')
     calendar = Calendar()
     current_year = int(year)
@@ -32,8 +34,10 @@ def rooster(year, week):
                     if date not in dates:
                         dates.append(date)
 
-    student = db.session.query(User.id).filter(User.id == current_user.id).subquery('student')
+    start_date = dates[0]
+    end_date = dates[len(dates)-1] + timedelta(days=1)
 
+    student = db.session.query(User.id).filter(User.id == current_user.id).subquery('student')
     lectures =  Lecture.query\
                 .join(Course, Course.id == Lecture.course_id)\
                 .join(Attendee, Attendee.course_id == Course.id)\
@@ -41,12 +45,8 @@ def rooster(year, week):
                 .join(User, User.id == Course.teacher_id)\
                 .join(student, student.c.id == Attendee.user_id)\
                 .add_columns(Lecture.id, Language.language, User.username, Lecture.start_time, Lecture.end_time, Lecture.lecture_name)\
-                .filter(Lecture.start_time >= dates[0], Lecture.start_time <= dates[len(dates)-1])\
+                .filter(Lecture.start_time >= start_date, Lecture.start_time < end_date)\
                 .all()
-                
-
-    for lecture in lectures:
-        print(lecture)
 
     if current_week-1 < 1:
         if datetime(current_year-1, 12, 28).isocalendar()[1] == 53:
@@ -64,7 +64,7 @@ def rooster(year, week):
     else:
         next = (current_year, current_week+1)
 
-    return render_template('rooster.html', dates=dates, current_day=current_day, previous=previous, next=next, lectures=lectures, timedelta=timedelta())
+    return render_template('rooster.html', dates=dates, current_day=current_day, previous=previous, next=next, lectures=lectures)
     
 @student_blueprint.route('/inschrijvingen/<username>')
 @login_required
@@ -89,6 +89,8 @@ def inschrijvingen(username):
 @student_blueprint.route('/inschrijven/<language_id>/<course_id>')
 @login_required
 def inschrijven(language_id, course_id):
+    """ Schrijft gebruiker X in bij de gespecificeerde cursus.
+    """
     language = Language.query.filter_by(id=language_id).first()
     if Attendee.query.filter_by(user_id=current_user.id, course_id=int(course_id)).first() == None:
         discount = False
@@ -109,6 +111,8 @@ def inschrijven(language_id, course_id):
 @student_blueprint.route('/instellingen', methods=['GET', 'POST'])
 @login_required
 def instellingen():
+    """ Geeft de instellingen van gebruiker X weer en biedt de mogelijkheid om deze aan te passen.
+    """
     username_form = AlterUsernameForm()
     email_form = AlterEmailForm()
     password_form = AlterPasswordForm()
