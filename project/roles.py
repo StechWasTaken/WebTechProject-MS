@@ -19,7 +19,7 @@ def role_required(role="ANY"):
             urole = ""
             if current_user.is_authenticated:
                 urole = getRole(current_user.id)
-            if role not in urole:
+            if role != urole or role != 'admin':
                 return current_app.login_manager.unauthorized()
             return func(*args, **kwargs)
         return decorated_view
