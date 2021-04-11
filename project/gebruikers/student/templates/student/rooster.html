@@ -25,11 +25,18 @@
                 <tr>
                     <td>{{ hour }}:00</td>
                     {% for date in dates %}
-                        <td>
+                            {% if lectures == [] %}
+                                <td>
+                            {% endif %}
                             {% for lecture in lectures %}
-                                {% if hour == lecture.start_time.hour and date.day == lecture.start_time.day and date.month == lecture.start_time.month and date.year == lecture.start_time.year %}
+                                
+                                {% if dt.combine(date, t) + td(hours=hour+1) >= lecture.start_time and dt.combine(date, t) + td(hours=hour) < lecture.end_time %}       
+                                <td style="background-color: rgb(192, 192, 192);">
                                     {{ lecture.language }}
+                                {% else %}
+                                <td>
                                 {% endif %}
+
                             {% endfor %}
                         </td>
                     {% endfor %}

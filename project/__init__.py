@@ -1,5 +1,5 @@
 import os
-from datetime import *
+from datetime import datetime, timedelta, time
 from calendar import *
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.context_processor
 def inject_stage_and_region():
-    return dict(date_now=datetime.now().date())
+    return dict(date_now=datetime.now().date(), td=timedelta, dt=datetime, t=time())
 
 app.config['SECRET_KEY'] = 'mijngeheimesleutel'
 
