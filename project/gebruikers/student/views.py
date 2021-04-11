@@ -47,6 +47,11 @@ def rooster(year, week):
 @student_blueprint.route('/inschrijvingen/<username>')
 @login_required
 def inschrijvingen(username):
+    """ Kijkt bij welke cursussen de gebruiker is ingeschreven
+    Ook berekent hij de korting hier
+    """
+    korting = Korting()
+
     if username != current_user.username:
         return redirect(url_for('index'))
 
@@ -55,24 +60,27 @@ def inschrijvingen(username):
                         .join(Course, Course.id == Attendee.course_id)\
                         .join(User, User.id == Course.teacher_id)\
                         .join(Language, Language.id == Course.language_id)\
-                        .add_columns(Course.id, Language.language, User.username, Course.location)
+                        .add_columns(Course.id, Language.language, User.username, Course.location, Course.cost, Attendee.discount)
 
-    return render_template('inschrijvingen.html', inschrijvingen=inschrijvingen)
+    return render_template('inschrijvingen.html', inschrijvingen=inschrijvingen, korting=korting)
 
 @student_blueprint.route('/inschrijven/<language_id>/<course_id>')
 @login_required
 def inschrijven(language_id, course_id):
     language = Language.query.filter_by(id=language_id).first()
     if Attendee.query.filter_by(user_id=current_user.id, course_id=int(course_id)).first() == None:
+        discount = False
+        if Attendee.query.filter_by(user_id=current_user.id).first() != None: # Als de user al een keer is ingeschreven krijgt hij korting
+            discount = True
         try:
-            attendee = Attendee(user_id=current_user.id, course_id=int(course_id))
+            attendee = Attendee(user_id=current_user.id, course_id=int(course_id), discount=discount)
             db.session.add(attendee)
             db.session.commit()
         except:
             flash('Inschrijven mislukt.')
             return redirect(url_for('standaard.cursus', language=language, course_id=course_id))
     else:
-        flash('Inschrijven mislukt.')
+        flash('U bent al ingeschreven voor deze cursus.')
         return redirect(url_for('standaard.cursus', language=language, course_id=course_id))
     return redirect(url_for('student.inschrijvingen', username=current_user.username))
 

@@ -13,6 +13,7 @@
                         <th scope="col">Taal</th>
                         <th scope="col">Docent</th>
                         <th scope="col">Locatie</th>
+                        <th scope="col">Kosten</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,11 @@
                         <td>{{ inschrijving.language }}</td>
                         <td>{{ inschrijving.username }}</td>
                         <td>{{ inschrijving.location }}</td>
+                        {% if inschrijving.discount == True %}
+                        <td>{{ (inschrijving.cost)*korting }}</td>
+                        {% else %}
+                        <td>{{ inschrijving.cost }}</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>

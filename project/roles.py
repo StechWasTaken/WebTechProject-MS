@@ -12,6 +12,7 @@ from functools import wraps
 def role_required(role="ANY"):
     """maakt een wrapper waar de role gecheckt wordt
     als de current_user niet de juiste role heeft krijgt hij een unauthorized pagina te zien
+    admins mogen alles zien mhahaha
     """
     def wrapper(func):
         @wraps(func)
@@ -19,15 +20,16 @@ def role_required(role="ANY"):
             urole = ""
             if current_user.is_authenticated:
                 urole = getRole(current_user.id)
-            if role not in urole:
+            if role != urole or role != 'admin':
                 return current_app.login_manager.unauthorized()
             return func(*args, **kwargs)
         return decorated_view
     return wrapper
 
-    
+
+# Dit is nu enigssinds overbodig, maar in principe nog wel bruikbaar
 def addRole(uid, rolename):
-    """ adds a role to user, in UserRoles table"""
+    """ adds a role to user"""
     user = User.query.filter_by(id=uid).first()
     role = Role.query.filter_by(name = rolename).first()
     user.role_id = role.id
