@@ -9,6 +9,7 @@ from project.roles import *
 from project.gebruikers.admin.forms import *
 
 # /admin
+# Deze admin views zijn zo gekozen dat admin vrijwel alle rechten heeft, behalve om noodzakelijke dingen aan te passen
 
 admin_blueprint = Blueprint('administrator', __name__, template_folder='templates/admin')
 
@@ -45,6 +46,7 @@ class AdminModelView(ModelView):
 class AdminUserView(AdminModelView):
     """ ook role_id is te zien zo
     Kunt hier aanpassen welke kolommen te zien zijn
+    Password is niet zichtbaar en ook de user id niet, vanwege veiligheid
     """
     column_display_pk = True 
     # column_hide_backrefs = False
@@ -59,6 +61,7 @@ class AdminUserView(AdminModelView):
 class AdminRoleView(AdminModelView):
     """ Ook id is te zien zo
     Kunt hier aanpassen welke kolommen te zien zijn
+    Deze mag je niet aanpassen, want rollen zijn noodzakelijk voor de site om te werken
     """
     column_display_pk = True
     column_list = ['id', 'name']
