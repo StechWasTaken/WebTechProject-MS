@@ -131,34 +131,6 @@ class AdminLectureView(AdminModelView):
         return super(AdminLectureView, self).validate_form(form)
 
 
-# Ik denk dat dit nu overbodig is
-class AdminAddLectureView(BaseView):
-    """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
-    """
-    @expose('/', methods=['GET', 'POST'])
-    def index(self):
-        form = AddLectureForm()
-        if form.validate_on_submit():
-            course_id = form.course_id.data
-            start_time = form.start_time.data
-            end_time = form. end_time.data
-            lecture_name = form.lecture_name.data
-
-            if end_time <= start_time:
-                flash("Geen geldige eind- en starttijd")
-            else:
-                lecture = Lecture(course_id = course_id,
-                                  start_time = start_time,
-                                  end_time = end_time,
-                                  lecture_name = lecture_name)
-                db.session.add(lecture)
-                db.session.commit()
-                flash("lecture toegevoegd")
-                return self.render("addlecture.html", form=form)                                 
-
-        
-        return self.render("addlecture.html", form=form)
-
 class AdminExit(BaseView):
     @expose('/')
     def index(self):
@@ -175,5 +147,4 @@ admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 admin.add_view(AdminCourseView(Course, db.session))
 admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture")) # Overbodig, verwijderen?
 admin.add_view(AdminExit(name='Exit'))
