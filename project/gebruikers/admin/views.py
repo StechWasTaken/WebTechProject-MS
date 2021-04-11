@@ -122,8 +122,8 @@ class AdminLectureView(AdminModelView):
     def validate_form(self, form):
         """ Custom validation code that checks dates """
         if form.start_time.data != None and form.end_time.data != None:
-            if form.start_time.data <= form.end_time.data:
-                flash("start time cannot be less than end time!")
+            if form.start_time.data => form.end_time.data:
+                flash("Starttijd mag niet later zijn dan de eindtijd")
                 return False
         return super(AdminLectureView, self).validate_form(form)
 
