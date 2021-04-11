@@ -1,0 +1,35 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+
+<p><h3> Add Course </h3> </p>
+<p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.username.label }} 
+            <div>
+                {{ form.username }}
+            </div>
+        </div>
+        <div>
+            {{ form.language.label}} 
+            <div>
+                {{ form.language }}
+            </div>
+        </div>
+        <div>
+            {{ form.location.label }} 
+            <div>
+                {{ form.location }}
+            </div>
+        </div>
+        <div>
+            <div>
+                {{ form.submit(class="btn btn-dark") }}
+            </div>
+        </div>
+    </form>
+</p>
+{% endblock %}

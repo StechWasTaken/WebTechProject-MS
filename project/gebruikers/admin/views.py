@@ -1,4 +1,4 @@
-from flask import current_app, flash
+from flask import current_app, flash, redirect, render_template
 from flask.blueprints import Blueprint
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
@@ -42,7 +42,6 @@ class AdminModelView(ModelView):
         return current_app.login_manager.unauthorized()
 
 
-
 class AdminUserView(AdminModelView):
     """ ook role_id is te zien zo
     Kunt hier aanpassen welke kolommen te zien zijn
@@ -51,6 +50,10 @@ class AdminUserView(AdminModelView):
     # column_hide_backrefs = False
     column_list = ['email', 'username', 'role_id']
     form_columns = ('email', 'username', 'password', 'role_id')
+    form_choices = {'role_id': [
+        ('1', 'student'), ('2', 'docent'), ('3', 'admin')
+    ]}
+    column_sortable_list = ('email', 'username', 'role_id')
 
 
 class AdminRoleView(AdminModelView):
@@ -58,7 +61,6 @@ class AdminRoleView(AdminModelView):
     Kunt hier aanpassen welke kolommen te zien zijn
     """
     column_display_pk = True
-    # column_hide_backrefs = False
     column_list = ['id', 'name']
     can_edit = False
     can_create = False
@@ -66,14 +68,45 @@ class AdminRoleView(AdminModelView):
 
 class AdminLanguageView(AdminModelView):
     column_display_pk = True
-    # column_hide_backrefs = False
     column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
     column_display_pk = True 
     # column_hide_backrefs = False
-    column_list = ['teacher_id', 'language_id', 'location']
-    form_columns = ('teacher_id', 'language_id', 'location')
+    column_list = ['id', 'teacher_id', 'language_id', 'location']
+    can_create = False
+    column_sortable_list = ('id', 'teacher_id', 'language_id', 'location')
+    # form_columns = ('teacher_id', 'language_id', 'location')
+
+class AdminAddCourseView(BaseView):
+    """ eigen form die een course toevoegd dmv naam, taal en locatie
+    """
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        form = AddCourseForm()
+
+        if form.validate_on_submit():
+            username = form.username.data
+            language = form.language.data
+            location = form.location.data
+
+            # check if some is a teacher
+            user = User.query.filter_by(username = username).first()
+            language = Language.query.filter_by(language = language).first()
+            if user.role_id != 2:
+                flash("deze user is geen docent")
+            elif language == None:
+                flash("deze taal bestaat niet")
+            else:
+                course = Course(teacher_id = user.id, 
+                                language_id = language.id,
+                                location = location)
+                db.session.add(course)
+                db.session.commit()
+                flash("course toegevoegd")
+                return self.render("addcourse.html", form=form)
+
+        return self.render("addcourse.html", form=form)
 
 
 class AdminLectureView(AdminModelView):
@@ -81,6 +114,49 @@ class AdminLectureView(AdminModelView):
     # column_hide_backrefs = False
     column_list = ['course_id', 'start_time', 'end_time', 'lecture_name']
     form_columns = ('course_id', 'start_time', 'end_time', 'lecture_name')
+    column_sortable_list = ('course_id', 'start_time', 'end_time', 'lecture_name')
+
+    def validate_form(self, form):
+        """ Custom validation code that checks dates """
+        if form.start_time.data != None and form.end_time.data != None:
+            if form.start_time.data <= form.end_time.data:
+                flash("start time cannot be less than end time!")
+                return False
+        return super(AdminLectureView, self).validate_form(form)
+
+
+# Ik denk dat dit nu overbodig is
+class AdminAddLectureView(BaseView):
+    """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
+    """
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        form = AddLectureForm()
+        if form.validate_on_submit():
+            course_id = form.course_id.data
+            start_time = form.start_time.data
+            end_time = form. end_time.data
+            lecture_name = form.lecture_name.data
+
+            if end_time <= start_time:
+                flash("Geen geldige eind- en starttijd")
+            else:
+                lecture = Lecture(course_id = course_id,
+                                  start_time = start_time,
+                                  end_time = end_time,
+                                  lecture_name = lecture_name)
+                db.session.add(lecture)
+                db.session.commit()
+                flash("lecture toegevoegd")
+                return self.render("addlecture.html", form=form)                                 
+
+        
+        return self.render("addlecture.html", form=form)
+
+class AdminExit(BaseView):
+    @expose('/')
+    def index(self):
+        return redirect(url_for('index'))
 
 
 admin = Admin(app, index_view=AdminHomeView())
@@ -88,11 +164,10 @@ admin = Admin(app, index_view=AdminHomeView())
 # add views
 admin.add_view(AdminUserView(User, db.session)) # werkt voor nu
 admin.add_view(AdminRoleView(Role, db.session)) # werkt voor nu
+admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 
-admin.add_view(AdminLanguageView(Language, db.session))
 admin.add_view(AdminCourseView(Course, db.session))
+admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-
-
-# misschien dat we dit ook zo kunnen maken dat het voor de admin makkelijker is om dingen toe te voegen
-# ga ik nog naar kijken
+# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture")) # Overbodig, verwijderen?
+admin.add_view(AdminExit(name='Exit'))
