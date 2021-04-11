@@ -22,11 +22,15 @@ class AdminHomeView(AdminIndexView):
         return self.render('index.html', username = name)
 
     def is_accessible(self):
+        """geeft aan, zoals de naam zegt, of deze view accessible is
+        """
         if current_user.is_authenticated:
             if getRole(current_user.id) == "admin":
                 return True
 
     def inaccessible_callback(self, name, **kwargs):
+        """ als hij inaccesible is, zegt hij unauthorized en gaat hij naar login
+        """
         return current_app.login_manager.unauthorized()
 
 
@@ -57,7 +61,7 @@ class AdminUserView(AdminModelView):
 
 
 class AdminRoleView(AdminModelView):
-    """ Ook id is te zien zo
+    """ Ook id is te zien met column_list id, name
     Kunt hier aanpassen welke kolommen te zien zijn
     """
     column_display_pk = True
@@ -71,6 +75,9 @@ class AdminLanguageView(AdminModelView):
     column_list = ['id', 'language']
 
 class AdminCourseView(AdminModelView):
+    """aanpassingen welke coumns sortable zijn en welke er bij aangepast kunnen worden
+    kan niet aanmaken, dat gebeurt via Add Course
+    """
     column_display_pk = True 
     column_list = ['id', 'teacher_id', 'language_id', 'location', 'cost', 'description']
     can_create = False
@@ -148,6 +155,8 @@ class AdminLectureView(AdminModelView):
 
 
 class AdminExit(BaseView):
+    """ redirect naar de homepage
+    """
     @expose('/')
     def index(self):
         return redirect(url_for('index'))
