@@ -116,7 +116,16 @@ class AdminLectureView(AdminModelView):
     form_columns = ('course_id', 'start_time', 'end_time', 'lecture_name')
     column_sortable_list = ('course_id', 'start_time', 'end_time', 'lecture_name')
 
+    def validate_form(self, form):
+        """ Custom validation code that checks dates """
+        if form.start_time.data != None and form.end_time.data != None:
+            if form.start_time.data <= form.end_time.data:
+                flash("start time cannot be less than end time!")
+                return False
+        return super(AdminLectureView, self).validate_form(form)
 
+
+# Ik denk dat dit nu overbodig is
 class AdminAddLectureView(BaseView):
     """ eigen form ipv gewone lectureview, kan eventueel nog gemaakt worden
     """
@@ -160,5 +169,5 @@ admin.add_view(AdminLanguageView(Language, db.session)) # werkt voor nu
 admin.add_view(AdminCourseView(Course, db.session))
 admin.add_view(AdminAddCourseView(name="Add Course", url="/addcourse"))
 admin.add_view(AdminLectureView(Lecture, db.session))
-admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture"))
+# admin.add_view(AdminAddLectureView(name="Add Lecture", url="/addlecture")) # Overbodig, verwijderen?
 admin.add_view(AdminExit(name='Exit'))

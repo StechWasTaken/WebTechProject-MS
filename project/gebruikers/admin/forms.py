@@ -22,3 +22,16 @@ class AddLectureForm(FlaskForm):
     end_time = DateTimeField('End Time', validators=[DataRequired()])
     lecture_name = StringField('Lecture Name', validators=[DataRequired()])
     submit = SubmitField('Add Course')
+
+    # def validate(self):
+    #     if not Form.validate(self):
+    #         return False
+    #     course_id = form.course_id.data
+    #     start_time = form.start_time.data
+    #     end_time = form. end_time.data
+    #     lecture_name = form.lecture_name.data
+
+    #     if end_time <= start_time:
+    #         return False
+
+    #    return True
