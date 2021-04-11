@@ -19,7 +19,7 @@
               <a href="{{url_for('standaard.cursussen')}}">
               <img class="d-block w-100" src="/static/code.png" alt="cursussen"> <!--source afbeeling nog veranderen-->
               <div class="carousel-caption d-none d-md-block">
-                <h3 class=whitetext">Onze Cursussen</h5>
+                <h1 class=whitetext">Onze Cursussen</h1>
                 <p>all onze cursussen</p>
               </div>
               </a>
@@ -29,7 +29,7 @@
               <a href="{{ url_for('standaard.cursus', language=cursus.language, course_id=cursus.id)}}">
               <img class="d-block w-100" src="/static/code.png" alt={{cursus.language}}> <!-- source afbeeling nog veranderen -->
               <div class="carousel-caption d-none d-md-block">
-                  <h3 class="whitetext">{{cursus.language}}</h5> 
+                  <h1 class="whitetext">{{cursus.language}}</h1> 
 
                 <p>{{cursus.description}}</p>
               </div>
