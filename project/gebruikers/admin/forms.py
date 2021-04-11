@@ -7,8 +7,7 @@ from project.models import *
 
 
 class AddCourseForm(FlaskForm):
-    """ teacher_id, language_id, location 
-    teacher username, language name, location
+    """teacher username, language name, location, cost, description
     """
 
     username = SelectField('Teacher Username', validators=[DataRequired()])
