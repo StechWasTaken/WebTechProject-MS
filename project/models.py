@@ -16,7 +16,6 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(user_id)
 
-
 class User(db.Model, UserMixin):
 
     __tablename__ = 'users'
@@ -129,8 +128,3 @@ class Lecture(db.Model):
     start_time          = db.Column(db.DateTime) 
     end_time            = db.Column(db.DateTime)
     lecture_name        = db.Column(db.Text)
-
-
-
-
-

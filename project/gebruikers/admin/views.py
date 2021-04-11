@@ -82,7 +82,22 @@ class AdminAddCourseView(BaseView):
     """
     @expose('/', methods=['GET', 'POST'])
     def index(self):
+        
+        usernames = []
+        languages = []
+
+        users = User.query.filter_by(role_id = 2).all()
+        for user in users:
+            usernames += [user.username]
+
+        lans = Language.query.filter_by().all()
+        print(languages)
+        for lan in lans:
+            languages += [lan.language]
+
         form = AddCourseForm()
+        form.username.choices = usernames
+        form.language.choices = languages
 
         if form.validate_on_submit():
             username = form.username.data
