@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SubmitField, DateTimeField
+from wtforms import StringField, PasswordField, IntegerField, SubmitField, DateTimeField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms import ValidationError
 from project.models import *
@@ -12,6 +12,8 @@ class AddCourseForm(FlaskForm):
     username = StringField('Teacher Username', validators=[DataRequired()])
     language = StringField('Language', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
+    cost = StringField('Cost', validators=[DataRequired()])
+    description = TextAreaField('Course Description', validators=[DataRequired()])    
     submit = SubmitField('Add Course')
 
 

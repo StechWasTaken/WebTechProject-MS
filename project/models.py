@@ -77,14 +77,19 @@ class Course(db.Model):
 
     __tablename__ = 'courses'
     id              = db.Column(db.Integer, primary_key=True)
-    teacher_id      = db.Column(db.Integer, db.ForeignKey("users.id"))
-    language_id     = db.Column(db.Integer, db.ForeignKey("languages.id"))
+    teacher_id      = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    language_id     = db.Column(db.Integer, db.ForeignKey("languages.id"), nullable=False)
     location        = db.Column(db.Text, nullable=False)
+    cost            = db.Column(db.Float, nullable=False)
+    description     = db.Column(db.Text, nullable=False)
 
-    def __init__(self, teacher_id, language_id, location):
+
+    def __init__(self, teacher_id, language_id, location, cost, description):
         self.teacher_id = teacher_id
         self.language_id = language_id
         self.location = location
+        self.cost = cost
+        self.description = description
 
     def __repr__(self):
         return f"<Course start_time={self.start_time} location={self.location}>"
@@ -94,13 +99,21 @@ class Attendee(db.Model):
     __tablename__ = 'attendees'
     user_id     = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     course_id  = db.Column(db.Integer, db.ForeignKey("courses.id"), primary_key=True)
+    discount    = db.Column(db.Boolean)
 
-    def __init__(self, user_id, course_id):
+    def __init__(self, user_id, course_id, discount = False):
         self.user_id = user_id
         self.course_id = course_id
+        self.discount = discount
 
     def __repr__(self):
         return f"<Attendee user_id={self.user_id} course_id={self.course_id}>"
+
+def Korting():
+    """ Zegt hoeveel korting er is, vast percentage voor nu
+    """
+    korting = 0.5 # 50%
+    return korting
 
 class Lecture(db.Model):
     
