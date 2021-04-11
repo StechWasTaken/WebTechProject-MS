@@ -16,3 +16,6 @@ De admin heeft heel veel bevoegdheden. Hij kan users toevoegen en hen rollen toe
 Ook is er nog een instellingen panel voor alle users. Hier kan gebruikersnaam, email en wachtwoord gewijzigd worden.
 
 Als er geen database is, is het belangrijk om eerst een admin user te maken, zodat daarna alles makkelijk toe te voegen is.
+
+Admin login = penguin@penguin.nl, ww = 123 #zeerveilig
+Docent Misja@docent.nl, ww = 123

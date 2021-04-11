@@ -28,6 +28,6 @@ class AlterPasswordForm(FlaskForm):
     """ Een formulier voor het wijzigen van een wachtwoord.
     """
     old_password = PasswordField('Oude wachtwoord', validators=[DataRequired()])
-    new_password = PasswordField('Nieuwe wachtwoord', validators=[DataRequired(), EqualTo('pass_confirm',    message='Wachtwoord matched niet!')])
+    new_password = PasswordField('Nieuwe wachtwoord', validators=[DataRequired(), EqualTo('new_pass_confirm',    message='Wachtwoord matched niet!')])
     new_pass_confirm = PasswordField('Bevestig nieuwe wachtwoord', validators=[DataRequired()])
     submit = SubmitField('Wijzigen')

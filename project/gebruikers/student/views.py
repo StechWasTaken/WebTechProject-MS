@@ -3,7 +3,7 @@ from calendar import *
 import locale
 from flask.blueprints import Blueprint
 from project.roles import *
-from flask import render_template, flash, redirect, url_for, Markup
+from flask import render_template, flash, redirect, url_for, Markup, request
 from flask.blueprints import Blueprint
 from flask_login import login_user, login_required, logout_user, current_user
 from project.models import *
@@ -136,11 +136,13 @@ def instellingen():
         else:
             flash('Email is al in gebruik.')
     if password_form.validate_on_submit():
-        if user.check_password(password_form.old_password):
+        if user.check_password(password_form.old_password.data):
             flash('Wachtwoord veranderd.')
             user.password = password_form.new_password.data
             db.session.commit()
         else:
             flash('Huidige wachtwoord is incorrect.')
+    elif request.method == 'POST':
+        flash('validate mislukt')
 
     return render_template('instellingen.html', username_form=username_form, email_form=email_form, password_form=password_form) 

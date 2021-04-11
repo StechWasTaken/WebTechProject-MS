@@ -35,6 +35,14 @@ def cursus(language, course_id):
                 .join(User, Course.teacher_id == User.id)\
                 .add_columns(Course.id, Course.language_id, Language.language, User.username, Course.location, Course.cost, Course.description).first_or_404()
     
+    lectures =  Lecture.query\
+                .filter_by(course_id = int(course_id))\
+                .join(Course, Course.id == int(course_id))\
+                .join(Language, Language.id == Course.language_id)\
+                .add_columns(Lecture.lecture_name, Lecture.start_time, Lecture.end_time)\
+                .order_by(Lecture.start_time)\
+                .all()
+
     # kijkt naar discount
     discount = False
     korting = Korting()
@@ -42,7 +50,7 @@ def cursus(language, course_id):
         if Attendee.query.filter_by(user_id = current_user.id).first() != None:
             discount = True
 
-    return render_template('cursus.html', course=course, discount = discount, korting=korting)
+    return render_template('cursus.html', course=course, discount = discount, korting=korting, lectures=lectures)
 
 @standaard_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
