@@ -1,5 +1,6 @@
 # WebTechProject-MS
 Project voor Webtechnologie
+#requirements installeren voor gebruik!
 
 Deze website bestaat uit 2 relatief grote onderdelen. Het gewone user gedeelte en het admin gedeelte. Er zijn 3 rollen: student, docent en admin
 
